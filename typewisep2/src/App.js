@@ -9,18 +9,28 @@ function App() {
   const [code, setCode] = useState('');
   const [resultado, setResultado] = useState('');
   
-  // function analizar(){
-  //   axios.post('http://localhost:5000/analizar', {
-  //     entrada: code
-  //   })
-  //   .then(function (response) {
-  //     console.log(response);
-  //     setResultado(response.data.resultado);
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }
+  function analizar(){
+    axios.post('http://localhost:5000/analizar', {
+      entrada: code
+    })
+    .then(function (response) {
+      console.log(response);
+      setResultado(response.data.resultado);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  function graficar_AST(){
+    axios.get('http://localhost:5000/CrearAST')
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 
   return (
     <div className="App">
@@ -55,7 +65,10 @@ function App() {
         </div>
         
           <div>
-            <Button variant="primary" className="boton" onClick={()=>{} }>Analizar</Button>
+            <Button variant="primary" className="boton" onClick={()=>{analizar()} }>Analizar</Button>
+          </div>
+          <div>
+            <Button variant="primary" className="boton" onClick={()=>{graficar_AST()} }>Generar AST</Button>
           </div>
 
         </div>

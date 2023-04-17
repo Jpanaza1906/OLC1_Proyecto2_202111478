@@ -1,0 +1,10 @@
+const TIPO_VALOR={
+    DECIMAL: 'VAL_DECIMAL',//ya
+    CADENA: 'VAL_CADENA',//ya
+    ENTERO: 'VAL_ENTERO',//ya
+    BOOL: 'VAL_BOLEANO',//ya
+    CHAR: 'VAL_CHAR',//ya
+    UNARIA:'VAL_UNARIA', //ya
+    IDENTIFICADOR: 'VAL_IDENTIFICADOR'//ya
+}
+module.exports=TIPO_VALOR;

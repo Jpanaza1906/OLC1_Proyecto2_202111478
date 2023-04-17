@@ -1,0 +1,44 @@
+digraph G {
+node [shape = "box"]
+Nodo0[label = "RAIZ"];
+Nodo1[label = "DECLARACION"];
+Nodo0->Nodo1;
+Nodo2[label = "TIPO 
+ ENTERO"];
+Nodo1->Nodo2;
+Nodo3[label = "ID 
+ x"];
+Nodo1->Nodo3;
+Nodo4[label = " VAL_ENTERO
+ 100"];
+Nodo1->Nodo4;
+Nodo5[label = "DEC_METODO"];
+Nodo0->Nodo5;
+Nodo6[label = "IDENTIFICADOR 
+ resta"];
+Nodo5->Nodo6;
+Nodo7[label = "INSTRUCCIONES"];
+Nodo5->Nodo7;
+Nodo8[label = "PRINT"];
+Nodo7->Nodo8;
+Nodo9[label = "SUMA
+ +"];
+Nodo8->Nodo9;
+Nodo10[label = "RESTA
+ undefined"];
+Nodo9->Nodo10;
+Nodo11[label = " VAL_ENTERO
+ 150"];
+Nodo10->Nodo11;
+Nodo12[label = " VAL_IDENTIFICADOR
+ x"];
+Nodo10->Nodo12;
+Nodo13[label = " VAL_ENTERO
+ 200"];
+Nodo9->Nodo13;
+Nodo14[label = "MAIN"];
+Nodo0->Nodo14;
+Nodo15[label = "LLAMADA 
+ resta"];
+Nodo14->Nodo15;
+}
