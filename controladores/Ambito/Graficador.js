@@ -120,13 +120,15 @@ class Graficador{
                 this.grafo += _padre + `->` + value + `;\n`;
                 this.contador++;
         
-            }else if(_expresion.tipo === TIPO_OPERACION.SUMA || _expresion.tipo === TIPO_OPERACION.RESTA || _expresion.tipo === TIPO_OPERACION.IGUALIGUAL || _expresion.tipo === TIPO_OPERACION.OR){
-                var value = `Nodo${this.contador}`;
-                this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
-                this.grafo += _padre + `->` + value + `;\n`;
-                this.contador++;
-                this.graficarOperacion(_expresion.opIzq, value)
-                this.graficarOperacion(_expresion.opDer, value)
+            }else if(_expresion.tipo === TIPO_OPERACION.SUMA || _expresion.tipo === TIPO_OPERACION.RESTA || _expresion.tipo === TIPO_OPERACION.DIVISION ||
+                _expresion.tipo === TIPO_OPERACION.MULTIPLICACION  || _expresion.tipo === TIPO_OPERACION.POTENCIA || _expresion.tipo === TIPO_OPERACION.IGUALIGUAL || 
+                _expresion.tipo === TIPO_OPERACION.MODULO || _expresion.tipo === TIPO_OPERACION.OR){
+                    var value = `Nodo${this.contador}`;
+                    this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
+                    this.grafo += _padre + `->` + value + `;\n`;
+                    this.contador++;
+                    this.graficarOperacion(_expresion.opIzq, value)
+                    this.graficarOperacion(_expresion.opDer, value)
 
             }else if(_expresion.tipo === TIPO_OPERACION.UNARIA){
                 var value = `Nodo${this.contador}`;
@@ -142,6 +144,21 @@ class Graficador{
             case TIPO_OPERACION.SUMA:
                 return "+"
             
+            case TIPO_OPERACION.RESTA:
+                return "-"
+
+            case TIPO_OPERACION.MULTIPLICACION:
+                return "*"
+
+            case TIPO_OPERACION.DIVISION:
+                return "/"
+
+            case TIPO_OPERACION.POTENCIA:
+                return "^"
+
+            case TIPO_OPERACION.MODULO:
+                return "%"
+
             case TIPO_OPERACION.UNARIA:
                 return "-"
 
