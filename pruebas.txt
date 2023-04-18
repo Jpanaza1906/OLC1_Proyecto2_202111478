@@ -1,0 +1,10 @@
+int x = 100;
+boolean flag = true;
+
+void resta(){
+    int y = 20;
+    print(x - 100 + 200 + y);
+    print(97.0 == 97);
+    print(1 != flag);
+}
+main resta();

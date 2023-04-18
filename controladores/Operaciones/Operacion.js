@@ -13,19 +13,18 @@ function Operacion(_expresion,_ambito){
         _expresion.tipo === TIPO_VALOR.CADENA || _expresion.tipo === TIPO_VALOR.IDENTIFICADOR || _expresion.tipo === TIPO_VALOR.CHAR||_expresion.tipo===TIPO_INSTRUCCION.LLAMADA_METODO){
             return ValorExpresion(_expresion,_ambito);
     }
-    //      OPERADORES ARITMETICOS
-    else if(_expresion.tipo === TIPO_OPERACION.SUMA){
+    //      OPERACIONES ARITMETICAS
+    else if(_expresion.tipo === TIPO_OPERACION.SUMA || _expresion.tipo === TIPO_OPERACION.RESTA){
         return Aritmetica(_expresion,_ambito);
-
-    }else if(_expresion.tipo === TIPO_OPERACION.RESTA){
-        return Aritmetica(_expresion, _ambito);
-
-    }else if(_expresion.tipo === TIPO_OPERACION.IGUALIGUAL || _expresion.tipo === TIPO_OPERACION.DIFERENTE ||
+    }
+    //      OPERACIONES RELACIONALES
+    else if(_expresion.tipo === TIPO_OPERACION.IGUALIGUAL || _expresion.tipo === TIPO_OPERACION.DIFERENTE ||
         _expresion.tipo === TIPO_OPERACION.MENOR || _expresion.tipo === TIPO_OPERACION.MAYOR||_expresion.tipo === TIPO_OPERACION.MAYORIGUAL
         ||_expresion.tipo === TIPO_OPERACION.MENORIGUAL){
         return Relacional(_expresion, _ambito)
-
-    }else if(_expresion.tipo === TIPO_OPERACION.AND || _expresion.tipo === TIPO_OPERACION.OR || _expresion.tipo === TIPO_OPERACION.NOT){
+    }
+    //      OPERACIONES LOGICAS
+    else if(_expresion.tipo === TIPO_OPERACION.AND || _expresion.tipo === TIPO_OPERACION.OR || _expresion.tipo === TIPO_OPERACION.NOT){
         return Logica(_expresion, _ambito)
     }
 
