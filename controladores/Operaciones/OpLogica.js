@@ -46,7 +46,7 @@ function or(_opIzq, _opDer, _ambito) {
         }
     }
 }
-function and(_opIzq, _opDerm, _ambito){
+function and(_opIzq, _opDer, _ambito){
     const opIzq = Logica(_opIzq, _ambito)
     const opDer = Logica(_opDer, _ambito)
 

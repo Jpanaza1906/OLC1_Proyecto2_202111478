@@ -111,32 +111,34 @@ class Graficador{
     }
 
     graficarOperacion(_expresion, _padre){
-        if(_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.ENTERO || _expresion.tipo === TIPO_VALOR.BOOL ||
-            _expresion.tipo === TIPO_VALOR.CHAR || _expresion.tipo === TIPO_VALOR.IDENTIFICADOR || _expresion.tipo === TIPO_VALOR.CADENA){
-                var exp = _expresion.valor.toString()
-                exp = exp.replace(/\"/gi, '\\\"')
-                var value = `Nodo${this.contador}`;
-                this.grafo += value + `[label = \" ${_expresion.tipo}\n ${exp}\"];\n`;
-                this.grafo += _padre + `->` + value + `;\n`;
-                this.contador++;
-        
-            }else if(_expresion.tipo === TIPO_OPERACION.SUMA || _expresion.tipo === TIPO_OPERACION.RESTA || _expresion.tipo === TIPO_OPERACION.DIVISION ||
-                _expresion.tipo === TIPO_OPERACION.MULTIPLICACION  || _expresion.tipo === TIPO_OPERACION.POTENCIA || _expresion.tipo === TIPO_OPERACION.IGUALIGUAL || 
-                _expresion.tipo === TIPO_OPERACION.MODULO || _expresion.tipo === TIPO_OPERACION.OR){
-                    var value = `Nodo${this.contador}`;
-                    this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
-                    this.grafo += _padre + `->` + value + `;\n`;
-                    this.contador++;
-                    this.graficarOperacion(_expresion.opIzq, value)
-                    this.graficarOperacion(_expresion.opDer, value)
+        if (_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.ENTERO || _expresion.tipo === TIPO_VALOR.BOOL ||
+            _expresion.tipo === TIPO_VALOR.CHAR || _expresion.tipo === TIPO_VALOR.IDENTIFICADOR || _expresion.tipo === TIPO_VALOR.CADENA) {
+            var exp = _expresion.valor.toString()
+            exp = exp.replace(/\"/gi, '\\\"')
+            var value = `Nodo${this.contador}`;
+            this.grafo += value + `[label = \" ${_expresion.tipo}\n ${exp}\"];\n`;
+            this.grafo += _padre + `->` + value + `;\n`;
+            this.contador++;
 
-            }else if(_expresion.tipo === TIPO_OPERACION.UNARIA){
-                var value = `Nodo${this.contador}`;
-                this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
-                this.grafo += _padre + `->` + value + `;\n`;
-                this.contador++;
-                this.graficarOperacion(_expresion.opDer, value)
-            }
+        } else if (_expresion.tipo === TIPO_OPERACION.SUMA || _expresion.tipo === TIPO_OPERACION.RESTA || _expresion.tipo === TIPO_OPERACION.DIVISION ||
+            _expresion.tipo === TIPO_OPERACION.MULTIPLICACION || _expresion.tipo === TIPO_OPERACION.POTENCIA || _expresion.tipo === TIPO_OPERACION.MODULO ||
+            _expresion.tipo === TIPO_OPERACION.IGUALIGUAL || _expresion.tipo === TIPO_OPERACION.DIFERENTE || _expresion.tipo === TIPO_OPERACION.MENOR ||
+            _expresion.tipo === TIPO_OPERACION.MENORIGUAL || _expresion.tipo === TIPO_OPERACION.MAYOR || _expresion.tipo === TIPO_OPERACION.MAYORIGUAL ||
+            _expresion.tipo === TIPO_OPERACION.OR || _expresion.tipo === TIPO_OPERACION.AND) {
+            var value = `Nodo${this.contador}`;
+            this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
+            this.grafo += _padre + `->` + value + `;\n`;
+            this.contador++;
+            this.graficarOperacion(_expresion.opIzq, value)
+            this.graficarOperacion(_expresion.opDer, value)
+
+        } else if (_expresion.tipo === TIPO_OPERACION.UNARIA || _expresion.tipo === TIPO_OPERACION.NOT) {
+            var value = `Nodo${this.contador}`;
+            this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
+            this.grafo += _padre + `->` + value + `;\n`;
+            this.contador++;
+            this.graficarOperacion(_expresion.opDer, value)
+        }
     }
 
     getSimbolo(_tipo){
@@ -162,11 +164,32 @@ class Graficador{
             case TIPO_OPERACION.UNARIA:
                 return "-"
 
-            case TIPO_VALOR.IGUALIGUAL:
+            case TIPO_OPERACION.IGUALIGUAL:
                 return "=="
+
+            case TIPO_OPERACION.DIFERENTE:
+                return "!="
+
+            case TIPO_OPERACION.MENOR:
+                return "<"
+
+            case TIPO_OPERACION.MENORIGUAL:
+                return "<="
+
+            case TIPO_OPERACION.MAYOR:
+                return ">"
+
+            case TIPO_OPERACION.MAYORIGUAL:
+                return ">="
 
             case TIPO_OPERACION.OR:
                 return "||"
+
+            case TIPO_OPERACION.AND:
+                return "&&"
+
+            case TIPO_OPERACION.NOT:
+                return "!"
         }
     }
 

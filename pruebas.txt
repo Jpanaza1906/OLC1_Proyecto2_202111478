@@ -6,5 +6,8 @@ void resta(){
     print(x - 100 + 200 + y);
     print(97.0 == 97);
     print(1 != flag);
+    print(false || flag);
+    print(true && flag);
+    print(!false);
 }
 main resta();
