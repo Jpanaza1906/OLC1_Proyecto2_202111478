@@ -84,6 +84,13 @@ class Graficador{
                 this.grafo += _padre + "->" + nombreHijo + ";\n"
                 this.graficarOperacion(instruccion.expresion, nombreHijo)
             }
+            else if(instruccion.tipo === TIPO_INSTRUCCION.MASMAS || instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
+                var nombreHijo = "Nodo" + this.contador
+                this.contador++;
+                this.grafo += nombreHijo + `[label = \"${instruccion.tipo}\n ${this.getSimboloDecInc(instruccion.tipo)}\"];\n`;
+                this.grafo += _padre + "->" + nombreHijo + ";\n"
+                this.graficarOperacion(instruccion, nombreHijo)
+            }
 
             /*
             COLOCAR TODAVIA LO QUE RESTA DE BLOQUE
@@ -132,15 +139,60 @@ class Graficador{
             this.graficarOperacion(_expresion.opIzq, value)
             this.graficarOperacion(_expresion.opDer, value)
 
-        } else if (_expresion.tipo === TIPO_OPERACION.UNARIA || _expresion.tipo === TIPO_OPERACION.NOT) {
+        } else if(_expresion.tipo === TIPO_INSTRUCCION.MASMAS || _expresion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
+            var valor = _expresion.expresion.opIzq.toString()
+            valor = valor.replace(/\"/gi, '\\\"')
+            this.grafo += `Nodo${this.contador}` + `[label = \" VAL_IDENTIFICADOR\n ${valor}\"];\n`;
+            this.grafo += _padre + `->` + `Nodo${this.contador}` + `;\n`;
+            this.contador++;
+
+            var exp = _expresion.expresion.opDer.toString()
+            exp = exp.replace(/\"/gi, '\\\"')
+            
+            if(_expresion.tipo === TIPO_INSTRUCCION.MASMAS){
+                this.grafo += `Nodo${this.contador}` + `[label = \" VALOR SUMADO\n ${exp}\"];\n`;
+            }else{
+                this.grafo += `Nodo${this.contador}` + `[label = \" VALOR RESTADO\n ${exp}\"];\n`;
+            }
+            
+            this.grafo += _padre + `->` + `Nodo${this.contador}` + `;\n`;
+            this.contador++;
+
+        }else if (_expresion.tipo === TIPO_OPERACION.UNARIA || _expresion.tipo === TIPO_OPERACION.NOT) {
             var value = `Nodo${this.contador}`;
             this.grafo += value + `[label = \"${_expresion.tipo}\n ${this.getSimbolo(_expresion.tipo)}\"];\n`;
             this.grafo += _padre + `->` + value + `;\n`;
             this.contador++;
             this.graficarOperacion(_expresion.opDer, value)
+        } else if (_expresion.tipo === TIPO_OPERACION.TERNARIO){
+            var value = `Nodo${this.contador}`;
+            this.grafo += value + `[label = \"${_expresion.tipo}\"];\n`;
+            this.grafo += _padre + `->` + value + `;\n`;            
+            this.contador++;
+            this.graficarOperacion(_expresion.opIzq, value)            
+            var value2 = `Nodo${this.contador}`;         
+            var padre =  `Nodo${this.contador - 1}`;            
+            this.grafo += value2 + `[label = \"${"True"}\"];\n`;           
+            this.grafo += padre + `->` + value2 + `;\n`;
+            this.contador++;
+            this.graficarOperacion(_expresion.opMed, value2)
+            var value3 = `Nodo${this.contador}`;         
+            var padre =  `Nodo${this.contador - 1}`;           
+            this.grafo += value3 + `[label = \"${"False"}\"];\n`; 
+            this.grafo += padre + `->` + value3 + `;\n`;
+            this.contador++;
+            this.graficarOperacion(_expresion.opDer, value3)
         }
     }
+    getSimboloDecInc(_tipo){
+        switch (_tipo){
+            case TIPO_INSTRUCCION.MASMAS:
+                return "++"
 
+            case TIPO_INSTRUCCION.MENOSMENOS:
+                return "--"
+        }
+    }
     getSimbolo(_tipo){
         switch (_tipo){
             case TIPO_OPERACION.SUMA:

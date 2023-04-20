@@ -23,102 +23,158 @@ Nodo5->Nodo7;
 Nodo8[label = " VAL_BOLEANO
  true"];
 Nodo5->Nodo8;
-Nodo9[label = "DEC_METODO"];
+Nodo9[label = "DECLARACION"];
 Nodo0->Nodo9;
-Nodo10[label = "IDENTIFICADOR 
- resta"];
-Nodo9->Nodo10;
-Nodo11[label = "INSTRUCCIONES"];
-Nodo9->Nodo11;
-Nodo12[label = "DECLARACION"];
-Nodo11->Nodo12;
-Nodo13[label = "TIPO 
+Nodo10[label = "TIPO 
  ENTERO"];
-Nodo12->Nodo13;
-Nodo14[label = "ID 
- y"];
-Nodo12->Nodo14;
-Nodo15[label = " VAL_ENTERO
- 20"];
-Nodo12->Nodo15;
-Nodo16[label = "PRINT"];
-Nodo11->Nodo16;
-Nodo17[label = "SUMA
- +"];
+Nodo9->Nodo10;
+Nodo11[label = "ID 
+ edad"];
+Nodo9->Nodo11;
+Nodo12[label = " VAL_ENTERO
+ 0"];
+Nodo9->Nodo12;
+Nodo13[label = "DEC_METODO"];
+Nodo0->Nodo13;
+Nodo14[label = "IDENTIFICADOR 
+ resta"];
+Nodo13->Nodo14;
+Nodo15[label = "INSTRUCCIONES"];
+Nodo13->Nodo15;
+Nodo16[label = "DECLARACION"];
+Nodo15->Nodo16;
+Nodo17[label = "TIPO 
+ ENTERO"];
 Nodo16->Nodo17;
-Nodo18[label = "RESTA
- -"];
-Nodo17->Nodo18;
-Nodo19[label = " VAL_IDENTIFICADOR
- x"];
-Nodo18->Nodo19;
-Nodo20[label = "SUMA
- +"];
-Nodo18->Nodo20;
-Nodo21[label = " VAL_ENTERO
- 100"];
-Nodo20->Nodo21;
-Nodo22[label = " VAL_ENTERO
- 200"];
-Nodo20->Nodo22;
-Nodo23[label = " VAL_IDENTIFICADOR
+Nodo18[label = "ID 
  y"];
-Nodo17->Nodo23;
-Nodo24[label = "PRINT"];
-Nodo11->Nodo24;
-Nodo25[label = "IGUALIGUAL
- =="];
+Nodo16->Nodo18;
+Nodo19[label = " VAL_ENTERO
+ 26"];
+Nodo16->Nodo19;
+Nodo20[label = "DECLARACION"];
+Nodo15->Nodo20;
+Nodo21[label = "TIPO 
+ ENTERO"];
+Nodo20->Nodo21;
+Nodo22[label = "ID 
+ edad2"];
+Nodo20->Nodo22;
+Nodo23[label = " VAL_ENTERO
+ 18"];
+Nodo20->Nodo23;
+Nodo24[label = "DECLARACION"];
+Nodo15->Nodo24;
+Nodo25[label = "TIPO 
+ CADENA"];
 Nodo24->Nodo25;
-Nodo26[label = " VAL_DECIMAL
- 97"];
-Nodo25->Nodo26;
-Nodo27[label = " VAL_ENTERO
- 97"];
-Nodo25->Nodo27;
-Nodo28[label = "PRINT"];
-Nodo11->Nodo28;
-Nodo29[label = "DIFERENTE
- !="];
+Nodo26[label = "ID 
+ mensaje"];
+Nodo24->Nodo26;
+Nodo27[label = "TERNARIO"];
+Nodo24->Nodo27;
+Nodo28[label = "MAYORIGUAL
+ >="];
+Nodo27->Nodo28;
+Nodo29[label = " VAL_IDENTIFICADOR
+ edad2"];
 Nodo28->Nodo29;
 Nodo30[label = " VAL_ENTERO
- 1"];
-Nodo29->Nodo30;
-Nodo31[label = " VAL_IDENTIFICADOR
- flag"];
-Nodo29->Nodo31;
-Nodo32[label = "PRINT"];
-Nodo11->Nodo32;
-Nodo33[label = "OR
- ||"];
+ 18"];
+Nodo28->Nodo30;
+Nodo31[label = "True"];
+Nodo30->Nodo31;
+Nodo32[label = " VAL_CADENA
+ \"Eres mayor de edad\""];
+Nodo31->Nodo32;
+Nodo33[label = "False"];
 Nodo32->Nodo33;
-Nodo34[label = " VAL_BOLEANO
- false"];
+Nodo34[label = " VAL_CADENA
+ \"Eres menor de edad\""];
 Nodo33->Nodo34;
-Nodo35[label = " VAL_IDENTIFICADOR
- flag"];
-Nodo33->Nodo35;
-Nodo36[label = "PRINT"];
-Nodo11->Nodo36;
-Nodo37[label = "AND
- &&"];
-Nodo36->Nodo37;
-Nodo38[label = " VAL_BOLEANO
- true"];
+Nodo35[label = "PRINT"];
+Nodo15->Nodo35;
+Nodo36[label = " VAL_IDENTIFICADOR
+ mensaje"];
+Nodo35->Nodo36;
+Nodo37[label = "PRINT"];
+Nodo15->Nodo37;
+Nodo38[label = "SUMA
+ +"];
 Nodo37->Nodo38;
-Nodo39[label = " VAL_IDENTIFICADOR
- flag"];
-Nodo37->Nodo39;
-Nodo40[label = "PRINT"];
-Nodo11->Nodo40;
-Nodo41[label = "NOT
- !"];
+Nodo39[label = "SUMA
+ +"];
+Nodo38->Nodo39;
+Nodo40[label = "RESTA
+ -"];
+Nodo39->Nodo40;
+Nodo41[label = " VAL_IDENTIFICADOR
+ x"];
 Nodo40->Nodo41;
-Nodo42[label = " VAL_BOLEANO
+Nodo42[label = " VAL_ENTERO
+ 100"];
+Nodo40->Nodo42;
+Nodo43[label = " VAL_ENTERO
+ 200"];
+Nodo39->Nodo43;
+Nodo44[label = " VAL_IDENTIFICADOR
+ y"];
+Nodo38->Nodo44;
+Nodo45[label = "PRINT"];
+Nodo15->Nodo45;
+Nodo46[label = "IGUALIGUAL
+ =="];
+Nodo45->Nodo46;
+Nodo47[label = " VAL_DECIMAL
+ 97"];
+Nodo46->Nodo47;
+Nodo48[label = " VAL_ENTERO
+ 97"];
+Nodo46->Nodo48;
+Nodo49[label = "PRINT"];
+Nodo15->Nodo49;
+Nodo50[label = "DIFERENTE
+ !="];
+Nodo49->Nodo50;
+Nodo51[label = " VAL_ENTERO
+ 1"];
+Nodo50->Nodo51;
+Nodo52[label = " VAL_IDENTIFICADOR
+ flag"];
+Nodo50->Nodo52;
+Nodo53[label = "PRINT"];
+Nodo15->Nodo53;
+Nodo54[label = "OR
+ ||"];
+Nodo53->Nodo54;
+Nodo55[label = " VAL_BOLEANO
  false"];
-Nodo41->Nodo42;
-Nodo43[label = "MAIN"];
-Nodo0->Nodo43;
-Nodo44[label = "LLAMADA 
+Nodo54->Nodo55;
+Nodo56[label = " VAL_IDENTIFICADOR
+ flag"];
+Nodo54->Nodo56;
+Nodo57[label = "PRINT"];
+Nodo15->Nodo57;
+Nodo58[label = "AND
+ &&"];
+Nodo57->Nodo58;
+Nodo59[label = " VAL_BOLEANO
+ true"];
+Nodo58->Nodo59;
+Nodo60[label = " VAL_IDENTIFICADOR
+ flag"];
+Nodo58->Nodo60;
+Nodo61[label = "PRINT"];
+Nodo15->Nodo61;
+Nodo62[label = "NOT
+ !"];
+Nodo61->Nodo62;
+Nodo63[label = " VAL_BOLEANO
+ false"];
+Nodo62->Nodo63;
+Nodo64[label = "MAIN"];
+Nodo0->Nodo64;
+Nodo65[label = "LLAMADA 
  resta"];
-Nodo43->Nodo44;
+Nodo64->Nodo65;
 }

@@ -3,6 +3,7 @@ const Print = require("./Print");
 const Asignacion = require("./Asignacion");
 const Declaracion = require("./Declaracion");
 const SentenciaIf = require("./if");
+const incrementoYdecremento = require("./Increm_Decrem");
 
 function Bloque(_instrucciones,_ambito){
     var cadena=""
@@ -25,6 +26,10 @@ function Bloque(_instrucciones,_ambito){
             var mensaje = ejec.cadena
             
             if(mensaje != null){ cadena += mensaje }
+        }else if(instruccion.tipo === TIPO_INSTRUCCION.MASMAS || 
+            instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
+                var mensaje = incrementoYdecremento(instruccion, _ambito)
+                if (mensaje != null) { cadena += mensaje }
         }
     });
     return { cadena:cadena }

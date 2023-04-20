@@ -4,13 +4,14 @@ const TIPO_VALOR = require("../Enums/TipoValor");
 const Aritmetica = require("./Aritmetica.js");
 const Logica = require("./OpLogica");
 const Relacional = require("./Relacional");
+const Ternario = require("./Ternario");
 const ValorExpresion = require("./ValorExpresion");
 
 
 
 function Operacion(_expresion,_ambito){ 
     if(_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.BOOL || _expresion.tipo === TIPO_VALOR.ENTERO||
-        _expresion.tipo === TIPO_VALOR.CADENA || _expresion.tipo === TIPO_VALOR.IDENTIFICADOR || _expresion.tipo === TIPO_VALOR.CHAR||_expresion.tipo===TIPO_INSTRUCCION.LLAMADA_METODO){
+        _expresion.tipo === TIPO_VALOR.CADENA || _expresion.tipo === TIPO_VALOR.IDENTIFICADOR || _expresion.tipo === TIPO_VALOR.CHAR){
             return ValorExpresion(_expresion,_ambito);
     }
     //      OPERACIONES ARITMETICAS
@@ -28,6 +29,9 @@ function Operacion(_expresion,_ambito){
     //      OPERACIONES LOGICAS
     else if(_expresion.tipo === TIPO_OPERACION.AND || _expresion.tipo === TIPO_OPERACION.OR || _expresion.tipo === TIPO_OPERACION.NOT){
         return Logica(_expresion, _ambito)
+    }
+    else if(_expresion.tipo === TIPO_OPERACION.TERNARIO){        
+        return Ternario(_expresion, _ambito)
     }
 
 }

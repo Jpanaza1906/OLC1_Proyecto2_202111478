@@ -1,8 +1,11 @@
 int x = 100;
 boolean flag = true;
-
+int edad = 0;
 void resta(){
-    int y = 20;
+    int y = 26;
+    int edad2 = 18;
+    String mensaje = edad2 >= 18 ? "Eres mayor de edad" : "Eres menor de edad";
+    print(mensaje);
     print(x - 100 + 200 + y);
     print(97.0 == 97);
     print(1 != flag);

@@ -1,5 +1,14 @@
 const TIPO_INSTRUCCION = require("../Enums/TipoInstruccion");
-
+function nuevaOpTernario(_opIzq, _opMed, _opDer, _tipo, _linea,_columna){
+    return{
+        opIzq:_opIzq,
+        opMed:_opMed,
+        opDer:_opDer,
+        tipo:_tipo,
+        linea:_linea,
+        columna:_columna,
+    }
+}
 function nuevaOperacion(_opizq,_opDer,_tipo, _linea, _columna){
     return{
         opIzq:_opizq,
@@ -81,6 +90,27 @@ const Instruccion ={
     },nuevoIf: function(_expresion, _instrucciones, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.IF,
+            expresion: _expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoTernario: function(_opIzq, _opMed, _opDer, _tipo, _linea, _columna){
+        return nuevaOpTernario(_opIzq,_opMed,_opDer,_tipo,_linea,_columna);
+    },nuevoIncremento: function(_id, _instrucciones, _expresion, _linea, _columna){
+        return {    // identificador++
+            tipo: TIPO_INSTRUCCION.MASMAS,  // ++
+            id: _id.toLowerCase(),          // identificador
+            expresion: _expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+
+    },nuevoDecremento: function(_id, _instrucciones, _expresion, _linea, _columna){
+        return {    // identificador++
+            tipo: TIPO_INSTRUCCION.MENOSMENOS,  // --
+            id: _id.toLowerCase(),          // identificador
             expresion: _expresion,
             instrucciones: _instrucciones,
             linea: _linea,

@@ -4,7 +4,8 @@ const TIPO_INSTRUCCION={
     ASIGNACION: 'ASIGNACION',
     DEC_METODO:'DEC_METODO',
     MAIN: 'MAIN',
-    IF: 'IF',
-
+    IF: 'IF',    
+    MASMAS: 'MASMAS',
+    MENOSMENOS: 'MENOSMENOS',
 }
 module.exports = TIPO_INSTRUCCION;
