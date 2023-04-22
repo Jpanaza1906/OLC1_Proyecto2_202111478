@@ -1,7 +1,14 @@
 int x = 100;
 boolean flag = true;
+int x1 = (int) 12.9;
+double xd = (double) "13.4";
+xd = (double) 97;
 int edad = 0;
 void resta(){
+    print(x1);
+    int nc = (int)xd;
+    print((char)nc);
+    print((int)'a');
     int y = 26;
     int edad2 = 18;
     String mensaje = edad2 >= 18 ? "Eres mayor de edad" : "Eres menor de edad";

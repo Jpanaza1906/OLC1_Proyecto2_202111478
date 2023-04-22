@@ -116,6 +116,62 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
-    }
+    }, nuevoCasteo: function(_tipoC, _expresion, _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.CASTEO,
+            tipoC : _tipoC,
+            expresion  : _expresion,
+            linea : _linea,
+            columna : _columna
+        }
+    },nuevoIfElse: function (_expresion, _instruccionesIf, _instruccionesElse, _linea, _columna) {
+        return {
+            tipo: TIPO_INSTRUCCION.IFCE,
+            expresion: _expresion,
+            instruccionesIf: _instruccionesIf,
+            instruccionesElse: _instruccionesElse,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoElseIf: function (_expresion, _instruccionesElseIf, _linea, _columna) {
+        return {
+            tipo: TIPO_INSTRUCCION.ELSEIF,
+            expresion: _expresion,
+            instruccionesElseIf: _instruccionesElseIf,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoIfConElseIf: function (_expresion, _instruccionesIf, _lista_elseif, _instruccionesElse, _linea, _columna) {
+        return {
+            tipo: TIPO_INSTRUCCION.IFCEIF,
+            expresion: _expresion,
+            instruccionesIf: _instruccionesIf,
+            lista_elseif: _lista_elseif,
+            instruccionesElse: _instruccionesElse,
+            linea: _linea,
+            columna: _columna
+
+        }
+    },nuevoLista: function(_id, _tipo_lista, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.LIST,
+            id_lista: _id,
+            valor: null,
+            tipo_lista: _tipo_lista,
+            linea: _linea,
+            columna: _columna
+
+        }
+    },nuevoFor: function(_declaracion, _condiciones, _actualizacion, _instrucciones, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.FOR,
+            declaracion: _declaracion,
+            condiciones: _condiciones,
+            actualizacion: _actualizacion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },
 }
 module.exports = Instruccion;

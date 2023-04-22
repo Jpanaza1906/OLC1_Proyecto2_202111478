@@ -14,11 +14,14 @@
 "string"                return 'Rstring'
 "if"                    return 'Rif'
 "else"                  return 'Relse'
+"for"                   return 'Rfor'
+"list"                  return 'Rlist'
 "void"                  return 'Rvoid'
 "print"                 return 'Rprint'
 "true"                  return 'Rtrue'
 "false"                 return 'Rfalse'
 "main"                  return 'Rmain'
+"new"                   return 'Rnew'
 [0-9]+("."[0-9]+)\b    return 'decimal'
 "."                     return 'punto'
 [0-9]+\b                return 'entero'
@@ -97,10 +100,24 @@ CUERPO: DEC_VAR ptcoma {$$=$1;}                               //DECLARACION DE C
         |MAIN {$$=$1;} 
         ;
 
-METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, null, $6, this._$.first_line,this._$.first_column+1)}    
+METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, null, $6, this._$.first_line,this._$.first_column+1)} 
+        | Rvoid identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, $4, $7, this._$.first_line,this._$.first_column+1)}
+;
+
+LIST_PARAMETROS: LIST_PARAMETROS coma PARAMETROS {$1.push($3); $$=$1;}  
+        |PARAMETROS {$$=[$1];}
+;
+
+PARAMETROS: TIPO identificador {$$ = INSTRUCCION.nuevaDeclaracion($2, null, $1, this._$.first_line,this._$.first_column+1)}   
 ;
 
 MAIN: Rmain identificador parA parC ptcoma {$$ = INSTRUCCION.nuevoMain($2, null, this._$.first_line,this._$.first_column+1)} 
+      |Rmain identificador parA PARAMETROS_LLAMADA parC ptcoma {$$ = INSTRUCCION.nuevoMain($2, $4, this._$.first_line,this._$.first_column+1)}
+
+;
+
+PARAMETROS_LLAMADA: PARAMETROS_LLAMADA coma EXPRESION {$$ = $1; $1.push($3);}
+                |EXPRESION {$$ = [$1];}
 ;
 
 DEC_VAR: TIPO identificador  {$$= INSTRUCCION.nuevaDeclaracion($2,null, $1,this._$.first_line, this._$.first_column+1)}
@@ -125,21 +142,38 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |ASIG_VAR ptcoma {$$=$1;}
         |PRINT {$$=$1;}
         |IF {$$=$1;}
+        |FOR {$$=$1;}
         |INCREMENTOYDECREMENTO ptcoma {$$=$1;}
+        |LISTA {$$=$1;}
 ;
 
 PRINT: Rprint parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoPrint($3, this._$.first_line,this._$.first_column+1);}
 ;
 
 IF: Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoIf($3, $6, this._$.first_line, this._$.first_column+1);}
+        |Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC Relse llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoIfElse($3, $6, $10 , this._$.first_line,this._$.first_column+1)}
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES  llaveC ELSEIF  {$$= new INSTRUCCION.nuevoIfConElseIf($3, $6, $8, null, this._$.first_line,this._$.first_column+1)}
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC ELSEIF Relse llaveA INSTRUCCIONES llaveC {$$= new INSTRUCCION.nuevoIfConElseIf($3, $6, $8, $11, this._$.first_line,this._$.first_column+1)}
+;
+ELSEIF:ELSEIF CONEIF {$1.push($2); $$=$1;}
+      | CONEIF {$$=[$1];}
 ; 
-
-INCREMENTOYDECREMENTO: identificador masmas {$$ = new INSTRUCCION.nuevoIncremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1 ,TIPO_OPERACION.SUMA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
-                     | identificador menosmenos {$$ = new INSTRUCCION.nuevoDecremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1, TIPO_OPERACION.RESTA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
+CONEIF: Relse Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoElseIf($4, $7 , this._$.first_line,this._$.first_column+1) }
 ;
 
 
-EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}        
+FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoFor($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)}
+;
+
+LISTA: Rlist menor TIPO mayor identificador igual Rnew Rlist menor TIPO mayor ptcoma {$$= INSTRUCCION.nuevoLista($5, $3, this._$.first_line, this._$.first_column+1)}
+;
+
+INCREMENTOYDECREMENTO: identificador masmas {$$ =  INSTRUCCION.nuevoIncremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1 ,TIPO_OPERACION.SUMA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
+                     | identificador menosmenos {$$ =  INSTRUCCION.nuevoDecremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1, TIPO_OPERACION.RESTA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
+;
+
+EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}
+         | parA TIPO parC EXPRESION {$$ = INSTRUCCION.nuevoCasteo($2,$4,this._$.first_line, this._$.first_column+1);}
          | EXPRESION inter EXPRESION dospuntos EXPRESION {$$ = INSTRUCCION.nuevoTernario($1, $3, $5, TIPO_OPERACION.TERNARIO,this._$.first_line, this._$.first_column+1);}
          | EXPRESION menos EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.RESTA,this._$.first_line, this._$.first_column+1);}
          | EXPRESION multi EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MULTIPLICACION,this._$.first_line, this._$.first_column+1);}
@@ -164,4 +198,4 @@ EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3,
          | string {$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.CADENA,this._$.first_line, this._$.first_column+1);}
          | identificador{$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR,this._$.first_line, this._$.first_column+1);}
          | char {$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.CHAR,this._$.first_line, this._$.first_column+1);}
-        ;    
+;    

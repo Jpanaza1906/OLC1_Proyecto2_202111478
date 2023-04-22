@@ -5,7 +5,13 @@ const TIPO_INSTRUCCION={
     DEC_METODO:'DEC_METODO',
     MAIN: 'MAIN',
     IF: 'IF',    
+    IFCE:"IFCE",
+    ELSEIF:"ELSEIF",
+    IFCEIF:"IFCEIF",
+    FOR: 'FOR',
+    LIST: 'LIST', 
     MASMAS: 'MASMAS',
     MENOSMENOS: 'MENOSMENOS',
+    CASTEO: 'CASTEO',
 }
 module.exports = TIPO_INSTRUCCION;

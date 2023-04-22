@@ -3,7 +3,11 @@ const Print = require("./Print");
 const Asignacion = require("./Asignacion");
 const Declaracion = require("./Declaracion");
 const SentenciaIf = require("./if");
+const SentenciaIfElse = require("./IfElse");
+const SentenciaIfElseIf = require("./ifElseIf");
 const incrementoYdecremento = require("./Increm_Decrem");
+const DeclararLista = require("./Lista");
+const SentenciaFor = require("./For");
 
 function Bloque(_instrucciones,_ambito){
     var cadena=""
@@ -21,15 +25,40 @@ function Bloque(_instrucciones,_ambito){
             var mensaje = Asignacion(instruccion, _ambito)
             if (mensaje != null) { cadena += mensaje }
         
-        }else if(instruccion.tipo === TIPO_INSTRUCCION.IF){
+        }
+        else if (instruccion.tipo === TIPO_INSTRUCCION.IF) {
             var ejec = SentenciaIf(instruccion, _ambito)
             var mensaje = ejec.cadena
-            
-            if(mensaje != null){ cadena += mensaje }
-        }else if(instruccion.tipo === TIPO_INSTRUCCION.MASMAS || 
-            instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
-                var mensaje = incrementoYdecremento(instruccion, _ambito)
-                if (mensaje != null) { cadena += mensaje }
+
+            if (mensaje != null) {
+                cadena += mensaje
+            }
+        }else if (instruccion.tipo === TIPO_INSTRUCCION.IFCE) {
+            var ejec = SentenciaIfElse(instruccion, _ambito)
+            var mensaje = ejec.cadena
+
+            if (mensaje != null) {
+                cadena += mensaje
+            }
+        } else if(instruccion.tipo === TIPO_INSTRUCCION.IFCEIF){
+            var ejec = SentenciaIfElseIf(instruccion, _ambito)
+            var mensaje = ejec.cadena
+
+            if(mensaje!=null){
+                cadena+=mensaje
+            }
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.MASMAS ||
+            instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS) {
+            var mensaje = incrementoYdecremento(instruccion, _ambito)
+            if (mensaje != null) { cadena += mensaje }
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.LIST) {
+            var mensaje = DeclararLista(instruccion, _ambito)
+            if (mensaje != null) { cadena += mensaje }
+
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.FOR) {
+            var ejec = SentenciaFor(instruccion, _ambito)
+            var mensaje = ejec.cadena
+            if (mensaje != null) { cadena += mensaje }
         }
     });
     return { cadena:cadena }

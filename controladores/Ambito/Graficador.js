@@ -176,12 +176,22 @@ class Graficador{
             this.grafo += padre + `->` + value2 + `;\n`;
             this.contador++;
             this.graficarOperacion(_expresion.opMed, value2)
-            var value3 = `Nodo${this.contador}`;         
-            var padre =  `Nodo${this.contador - 1}`;           
+            var value3 = `Nodo${this.contador}`;              
             this.grafo += value3 + `[label = \"${"False"}\"];\n`; 
             this.grafo += padre + `->` + value3 + `;\n`;
             this.contador++;
             this.graficarOperacion(_expresion.opDer, value3)
+        } else if(_expresion.tipo === TIPO_INSTRUCCION.CASTEO){
+            var value = `Nodo${this.contador}`;
+            this.grafo += value + `[label = \"${"CASTEO"}\"];\n`;            
+            this.grafo += _padre + `->` + value + `;\n`;        
+            this.contador++;
+            var value2 = `Nodo${this.contador}`;                   
+            var padre =  `Nodo${this.contador - 1}`;                       
+            this.grafo += value2 + `[label = \"${_expresion.tipoC}\"];\n`; 
+            this.grafo += padre + `->` + value2 + `;\n`;
+            this.contador++;
+            this.graficarOperacion(_expresion.expresion, value2) 
         }
     }
     getSimboloDecInc(_tipo){
@@ -269,7 +279,7 @@ class Graficador{
         this.grafo += tipoVar + `[label = \"IDENTIFICADOR \n ${_instruccion.id}\"];\n`;
         this.grafo += _padre + "->" + tipoVar + ";\n"
         this.contador++;
-        this.graficarOperacion(_instruccion.valor, _padre)
+        this.graficarOperacion(_instruccion.expresion, _padre)
     }
 
     graficarmetodo(_instruccion, _padre){
