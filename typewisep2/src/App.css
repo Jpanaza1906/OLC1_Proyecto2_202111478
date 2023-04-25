@@ -3,13 +3,17 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #516f96;
+  filter: brightness(80%) saturate(80%);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+h4{
+  color: #F2F2F2;
 }
 .editores{
   display: flex;

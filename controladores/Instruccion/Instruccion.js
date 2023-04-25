@@ -172,6 +172,21 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
-    },
+    },nuevoSwitch: function(_id, _cases, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.SWITCHCASE,
+            id: _id,
+            cases: _cases,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoCase: function(_expresion, _instrucciones, _linea, _columna){
+        return {
+            expresion : _expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    }
 }
 module.exports = Instruccion;

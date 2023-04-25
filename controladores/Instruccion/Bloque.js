@@ -8,12 +8,12 @@ const SentenciaIfElseIf = require("./ifElseIf");
 const incrementoYdecremento = require("./Increm_Decrem");
 const DeclararLista = require("./Lista");
 const SentenciaFor = require("./For");
+const SwitchCase = require("./Switch")
 
 function Bloque(_instrucciones,_ambito){
     var cadena=""
     
     _instrucciones.forEach(instruccion => {
-
         if(instruccion.tipo===TIPO_INSTRUCCION.PRINT){
            cadena += Print(instruccion,_ambito) + "\n"
            
@@ -59,6 +59,10 @@ function Bloque(_instrucciones,_ambito){
             var ejec = SentenciaFor(instruccion, _ambito)
             var mensaje = ejec.cadena
             if (mensaje != null) { cadena += mensaje }
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.SWITCHCASE){
+            var ejec = SwitchCase(instruccion,_ambito)
+            var mensaje = ejec.cadena
+            if (mensaje != null) {cadena += mensaje}
         }
     });
     return { cadena:cadena }

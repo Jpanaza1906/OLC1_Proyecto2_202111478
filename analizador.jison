@@ -14,6 +14,10 @@
 "string"                return 'Rstring'
 "if"                    return 'Rif'
 "else"                  return 'Relse'
+"switch"                return 'Rswitch'
+"case"                  return 'Rcase'
+"default"               return 'Rdefault'
+"break"                 return 'Rbreak'
 "for"                   return 'Rfor'
 "list"                  return 'Rlist'
 "void"                  return 'Rvoid'
@@ -77,11 +81,12 @@
 %left 'or'
 %left 'and'
 %right 'not'
-%left 'inter' 'igualigual' 'menor' 'menorIgual' 'mayor' 'mayorIgual' 'diferente'
+%left 'Rbreak' 'inter' 'igualigual' 'menor' 'menorIgual' 'mayor' 'mayorIgual' 'diferente'
 %left 'suma' 'menos'
 %left 'multi' 'div' 'modulo' 
 %nonassoc 'exponente'
 %left umenos 
+%left ucasteo
 
 %start INICIO
 
@@ -145,26 +150,39 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |FOR {$$=$1;}
         |INCREMENTOYDECREMENTO ptcoma {$$=$1;}
         |LISTA {$$=$1;}
+        |SWITCH {$$=$1;}
 ;
 
 PRINT: Rprint parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoPrint($3, this._$.first_line,this._$.first_column+1);}
 ;
-
+//TIPOS DE IF
 IF: Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoIf($3, $6, this._$.first_line, this._$.first_column+1);}
-        |Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC Relse llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoIfElse($3, $6, $10 , this._$.first_line,this._$.first_column+1)}
-        | Rif parA EXPRESION parC llaveA INSTRUCCIONES  llaveC ELSEIF  {$$= new INSTRUCCION.nuevoIfConElseIf($3, $6, $8, null, this._$.first_line,this._$.first_column+1)}
-        | Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC ELSEIF Relse llaveA INSTRUCCIONES llaveC {$$= new INSTRUCCION.nuevoIfConElseIf($3, $6, $8, $11, this._$.first_line,this._$.first_column+1)}
+        |Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC Relse llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoIfElse($3, $6, $10 , this._$.first_line,this._$.first_column+1)}
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES  llaveC ELSEIF  {$$= INSTRUCCION.nuevoIfConElseIf($3, $6, $8, null, this._$.first_line,this._$.first_column+1)}
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC ELSEIF Relse llaveA INSTRUCCIONES llaveC {$$= INSTRUCCION.nuevoIfConElseIf($3, $6, $8, $11, this._$.first_line,this._$.first_column+1)}
 ;
 ELSEIF:ELSEIF CONEIF {$1.push($2); $$=$1;}
       | CONEIF {$$=[$1];}
 ; 
-CONEIF: Relse Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoElseIf($4, $7 , this._$.first_line,this._$.first_column+1) }
+CONEIF: Relse Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoElseIf($4, $7, this._$.first_line, this._$.first_column+1) }
+;
+//TIPOS DE SWTICH
+SWITCH: Rswitch parA EXPRESION parC llaveA CASES llaveC {$$ = INSTRUCCION.nuevoSwitch($3, $6, this._$.first_line, this._$.first_column+1)}
 ;
 
-
-FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC {$$ = new INSTRUCCION.nuevoFor($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)}
+CASES: CASES CASEN {$1.push($2); $$=$1;}
+     | CASEN {$$ = [$1];}
+;
+CASEN: CASE dospuntos INSTRUCCIONES Rbreak ptcoma { $$ = INSTRUCCION.nuevoCase($1, $3, this._$.first_line, this._$.first_column+1);}
+;
+CASE: Rcase EXPRESION {$$ = $2;}
+    | Rdefault        {$$ = {valor:$1};}
 ;
 
+//CICLO FOR
+FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoFor($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)}
+;
+//LISTAS
 LISTA: Rlist menor TIPO mayor identificador igual Rnew Rlist menor TIPO mayor ptcoma {$$= INSTRUCCION.nuevoLista($5, $3, this._$.first_line, this._$.first_column+1)}
 ;
 
@@ -173,7 +191,7 @@ INCREMENTOYDECREMENTO: identificador masmas {$$ =  INSTRUCCION.nuevoIncremento($
 ;
 
 EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}
-         | parA TIPO parC EXPRESION {$$ = INSTRUCCION.nuevoCasteo($2,$4,this._$.first_line, this._$.first_column+1);}
+         | parA TIPO parC EXPRESION %prec ucasteo {$$ = INSTRUCCION.nuevoCasteo($2,$4,this._$.first_line, this._$.first_column+1);}
          | EXPRESION inter EXPRESION dospuntos EXPRESION {$$ = INSTRUCCION.nuevoTernario($1, $3, $5, TIPO_OPERACION.TERNARIO,this._$.first_line, this._$.first_column+1);}
          | EXPRESION menos EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.RESTA,this._$.first_line, this._$.first_column+1);}
          | EXPRESION multi EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MULTIPLICACION,this._$.first_line, this._$.first_column+1);}

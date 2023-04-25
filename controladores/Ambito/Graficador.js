@@ -91,7 +91,24 @@ class Graficador{
                 this.grafo += _padre + "->" + nombreHijo + ";\n"
                 this.graficarOperacion(instruccion, nombreHijo)
             }
-
+            else if(instruccion.tipo === TIPO_INSTRUCCION.SWITCHCASE){
+                var nombreHijo = "Nodo" + this.contador
+                this.contador++;
+                this.grafo += nombreHijo + "[label = \"SWITCH\"];\n"
+                this.grafo += _padre + "->" + nombreHijo + ";\n"
+                const cases = instruccion.cases
+                for(const ncase of cases){
+                    let casen = "Nodo" + this.contador
+                    this.contador++;
+                    this.grafo += casen + `[label = \"${"CASE"} \n ${ncase.expresion.valor}\"];\n`;
+                    this.grafo += nombreHijo + "->" + casen + ";\n"
+                    const instruccionescase = ncase.instrucciones
+                    console.log(instruccionescase)
+                    for(const nins of instruccionescase){
+                        this.graphInstruccionindividual(nins, casen)
+                    }
+                }
+            }
             /*
             COLOCAR TODAVIA LO QUE RESTA DE BLOQUE
                 - WHILE
@@ -101,7 +118,36 @@ class Graficador{
             */ 
         });
     }
-
+    graphInstruccionindividual(instruccion,_padre){
+        if(instruccion.tipo === TIPO_INSTRUCCION.DECLARACION){
+            var nombreHijo = "Nodo" + this.contador
+            this.contador++;
+            this.grafo += nombreHijo + "[label = \"DECLARACION\"];\n"
+            this.grafo += _padre + "->" + nombreHijo + ";\n"
+            this.graficarDeclaracion(instruccion, nombreHijo)
+        
+        }else if(instruccion.tipo === TIPO_INSTRUCCION.ASIGNACION){
+            var nombreHijo = "Nodo" + this.contador
+            this.contador++;
+            this.grafo += nombreHijo + "[label = \"ASIGNACION\"];\n"
+            this.grafo += _padre + "->" + nombreHijo + ";\n"
+            this.graficarAsignacion(instruccion, nombreHijo)
+        
+        }else if(instruccion.tipo === TIPO_INSTRUCCION.PRINT){
+            var nombreHijo = "Nodo" + this.contador
+            this.contador++;
+            this.grafo += nombreHijo + "[label = \"PRINT\"];\n"
+            this.grafo += _padre + "->" + nombreHijo + ";\n"
+            this.graficarOperacion(instruccion.expresion, nombreHijo)
+        }
+        else if(instruccion.tipo === TIPO_INSTRUCCION.MASMAS || instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
+            var nombreHijo = "Nodo" + this.contador
+            this.contador++;
+            this.grafo += nombreHijo + `[label = \"${instruccion.tipo}\n ${this.getSimboloDecInc(instruccion.tipo)}\"];\n`;
+            this.grafo += _padre + "->" + nombreHijo + ";\n"
+            this.graficarOperacion(instruccion, nombreHijo)
+        }
+    }
     graficarDeclaracion(_instruccion, _padre){
         var tipoVar = `Nodo${this.contador}`
         this.grafo += tipoVar + `[label = \"TIPO \n ${_instruccion.tipo_dato}\"];\n`;

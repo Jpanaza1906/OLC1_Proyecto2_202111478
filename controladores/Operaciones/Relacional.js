@@ -229,19 +229,4 @@ function mayorigual(_opIzq, _opDer, _ambito){
         }
     }
 }
-function ternario(_opIzq,_opMed,_opDer,_ambito){
-    const opIzq = Relacional(_opIzq, _ambito)
-    const opMed = Relacional(_opMed,_ambito)
-    const opDer = Relacional(_opDer,_ambito)
-
-    if ((opIzq.tipo === TIPO_DATO.BOOL)){
-        var resultado = false
-        return {
-            valor: resultado,
-            tipo: TIPO_DATO.BOOL,
-            linea: _opIzq.linea,
-            columna: _opIzq.columna
-        }
-    }
-}
 module.exports = Relacional
