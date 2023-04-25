@@ -187,6 +187,30 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
-    }
+    },nuevoWhile: function(_expresion, _instrucciones, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.WHILE,
+            expresion: _expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoDoWhile: function(_expresion, _instrucciones, _linea, _columna){
+        return {
+            tipo:TIPO_INSTRUCCION.DOWHILE,
+            expresion:_expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoEjecMetodo: function (_nombre, _lista_valores, _linea, _columna) {
+        return{
+            tipo: TIPO_INSTRUCCION.EJE_METODO,
+            nombre: _nombre,
+            lista_valores:_lista_valores,
+            linea: _linea,
+            columna: _columna
+        }
+    },
 }
 module.exports = Instruccion;

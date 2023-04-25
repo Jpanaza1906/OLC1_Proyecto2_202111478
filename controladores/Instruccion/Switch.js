@@ -1,5 +1,4 @@
 const Ambito = require("../Ambito/Ambito");
-const TIPO_DATO = require("../Enums/TipoDato");
 const Operacion = require("../Operaciones/Operacion");
 
 function SwitchCase(_instruccion, _ambito){
@@ -8,14 +7,14 @@ function SwitchCase(_instruccion, _ambito){
     const cases = _instruccion.cases
     for(const ncase of cases){
         if(variable.valor == ncase.expresion.valor){
-            var nuevoAmbito = new Ambito(_ambito, "Switch")
+            var nuevoAmbito = new Ambito(_ambito, "SWITCH")
             const Bloque = require("./Bloque")
             var eje = Bloque(ncase.instrucciones, nuevoAmbito)
             mensaje += eje.cadena
             break;
         }
         else if(ncase.expresion.valor == "default"){
-            var nuevoAmbito = new Ambito(_ambito, "Switch")
+            var nuevoAmbito = new Ambito(_ambito, "SWITCH")
             const Bloque = require("./Bloque")
             var eje = Bloque(ncase.instrucciones, nuevoAmbito)
             mensaje += eje.cadena

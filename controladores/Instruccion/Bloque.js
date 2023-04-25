@@ -9,6 +9,9 @@ const incrementoYdecremento = require("./Increm_Decrem");
 const DeclararLista = require("./Lista");
 const SentenciaFor = require("./For");
 const SwitchCase = require("./Switch")
+const SentenciaDoWhile = require("./DoWhile")
+const SentenciaWhile = require("./While")
+const EjecMetodo = require("./EjeMetodo")
 
 function Bloque(_instrucciones,_ambito){
     var cadena=""
@@ -63,6 +66,18 @@ function Bloque(_instrucciones,_ambito){
             var ejec = SwitchCase(instruccion,_ambito)
             var mensaje = ejec.cadena
             if (mensaje != null) {cadena += mensaje}
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.WHILE){
+            var ejec = SentenciaWhile(instruccion,_ambito)
+            var mensaje = ejec.cadena
+            if(mensaje != null) {cadena += mensaje}
+        } else if (instruccion.tipo === TIPO_INSTRUCCION.DOWHILE){
+            var ejec = SentenciaDoWhile(instruccion,_ambito)
+            var mensaje = ejec.cadena
+            if(mensaje != null) {cadena += mensaje}
+        } else if(instruccion.tipo === TIPO_INSTRUCCION.EJE_METODO){
+
+            var mensaje = EjecMetodo(instruccion, _ambito)
+            if (mensaje != null) { cadena += mensaje }
         }
     });
     return { cadena:cadena }

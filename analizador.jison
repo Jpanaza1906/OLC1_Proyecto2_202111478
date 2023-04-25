@@ -19,6 +19,8 @@
 "default"               return 'Rdefault'
 "break"                 return 'Rbreak'
 "for"                   return 'Rfor'
+"while"                 return 'Rwhile'
+"do"                    return 'Rdo'
 "list"                  return 'Rlist'
 "void"                  return 'Rvoid'
 "print"                 return 'Rprint'
@@ -145,12 +147,22 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$$ = $1; $1.push($2);}
 
 INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
         |ASIG_VAR ptcoma {$$=$1;}
+        |METODO_INSTR_SINPARAMETROS ptcoma{$$=$1;}
+        |METODO_INSTR_PARAMETROS{$$=$1;}
         |PRINT {$$=$1;}
         |IF {$$=$1;}
         |FOR {$$=$1;}
+        |WHILE {$$=$1;}
+        |DOWHILE {$$=$1;}
         |INCREMENTOYDECREMENTO ptcoma {$$=$1;}
         |LISTA {$$=$1;}
         |SWITCH {$$=$1;}
+;
+
+METODO_INSTR_SINPARAMETROS: identificador parA parC { $$ = INSTRUCCION.nuevoEjecMetodo($1, null, this._$.first_line,this._$.first_column+1) }
+;
+
+METODO_INSTR_PARAMETROS: identificador parA PARAMETROS_LLAMADA parC ptcoma { $$ = INSTRUCCION.nuevoEjecMetodo($1, $3, this._$.first_line,this._$.first_column+1) }
 ;
 
 PRINT: Rprint parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoPrint($3, this._$.first_line,this._$.first_column+1);}
@@ -181,6 +193,12 @@ CASE: Rcase EXPRESION {$$ = $2;}
 
 //CICLO FOR
 FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoFor($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)}
+;
+//CICLO WHILE
+WHILE: Rwhile parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoWhile($3, $6, this._$.first_line, this._$.first_column+1);}
+;
+//CICLO DO WHILE
+DOWHILE: Rdo llaveA INSTRUCCIONES llaveC Rwhile parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoDoWhile($7, $3, this._$.first_line, this._$.first_column+1);}
 ;
 //LISTAS
 LISTA: Rlist menor TIPO mayor identificador igual Rnew Rlist menor TIPO mayor ptcoma {$$= INSTRUCCION.nuevoLista($5, $3, this._$.first_line, this._$.first_column+1)}

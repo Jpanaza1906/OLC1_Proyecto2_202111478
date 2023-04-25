@@ -2,7 +2,7 @@ const TIPO_INSTRUCCION = require("../Enums/TipoInstruccion");
 
 function incrementoYdecremento(_instruccion, _ambito){
     if(_instruccion.tipo === TIPO_INSTRUCCION.MASMAS){
-        if(_ambito.existeSimboloAmbitoActual(_instruccion.id) != true){
+        if(_ambito.existeSimbolo(_instruccion.id) != true){
             return `Error: El identificador '${_instruccion.id}' no existe... Linea: ${_instruccion.linea} Columna: ${_instruccion.columna}`
         }
 
@@ -12,7 +12,7 @@ function incrementoYdecremento(_instruccion, _ambito){
         return null
 
     }else if(_instruccion.tipo === TIPO_INSTRUCCION.MENOSMENOS){
-        if(_ambito.existeSimboloAmbitoActual(_instruccion.id) != true){
+        if(_ambito.existeSimbolo(_instruccion.id) != true){
             return `Error: El identificador '${_instruccion.id}' no existe... Linea: ${_instruccion.linea} Columna: ${_instruccion.columna}`
         }
 
