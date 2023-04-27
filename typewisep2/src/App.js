@@ -48,13 +48,14 @@ function App() {
   }
   const handleSave = (event) => {
     // Crear un objeto Blob con el contenido del archivo
-    const content = 'Hola mundo!';
+    var valor = window.prompt("Ingrese el nombre del archivo a guardar:");
+    const content = code;
     const file = new Blob([content], { type: 'text/plain;charset=utf-8' });
 
     // Crear un enlace para descargar el archivo
     const link = document.createElement('a');
     link.href = URL.createObjectURL(file);
-    link.download = 'archivo.txt';
+    link.download = valor + '.tw';
 
     // Crear un elemento de entrada de archivo HTML para seleccionar la ubicación de descarga
     const input = document.createElement('input');
@@ -72,7 +73,7 @@ function App() {
     // Cuando el usuario elija la ubicación de descarga, descarga el archivo
     input.addEventListener('change', () => {
       const directory = input.files[0].webkitRelativePath.split('/')[0];
-      link.setAttribute('download', `${directory}/archivo.txt`);
+      link.setAttribute('download', `${directory}/${valor}.tw`);
       link.click();
     });
 
@@ -118,7 +119,11 @@ function App() {
               </a>
             </li>
 
-            <li><a className="dropdown-item" onClick={handleSave}>Guardar Archivo</a></li>
+            <li><a className="dropdown-item"  style={{position:'relative'}}>
+              <Button variant="primary" className="boton" onClick={handleSave} style={{position:'absolute', top:0, left:0, opacity:0}}>Guardar Archivo</Button>
+              Guardar Archivo              
+              </a>
+            </li>
           </ul>
         </li>
 
