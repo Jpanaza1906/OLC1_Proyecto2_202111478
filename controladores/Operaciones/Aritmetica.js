@@ -10,31 +10,31 @@ function Aritmetica(_expresion,_ambito){
         return ValorExpresion(_expresion, _ambito) 
     
     }else if (_expresion.tipo === TIPO_OPERACION.SUMA) {
-        console.log("suma")
+        //console.log("suma")
         return suma(_expresion.opIzq, _expresion.opDer, _ambito)
     
     }else if(_expresion.tipo === TIPO_OPERACION.RESTA){
-        console.log("resta")
+        //console.log("resta")
         return resta(_expresion.opIzq, _expresion.opDer, _ambito)
     
     }else if(_expresion.tipo === TIPO_OPERACION.MULTIPLICACION){
-        console.log("multiplicacion")
+        //console.log("multiplicacion")
         return multiplicacion(_expresion.opIzq, _expresion.opDer, _ambito)
     
     }else if(_expresion.tipo === TIPO_OPERACION.DIVISION){
-        console.log("division")
+        //console.log("division")
         return division(_expresion.opIzq, _expresion.opDer, _ambito)
     
     }else if(_expresion.tipo === TIPO_OPERACION.POTENCIA){
-        console.log("potencia")
+        //console.log("potencia")
         return potencia(_expresion.opIzq, _expresion.opDer, _ambito)
 
     }else if(_expresion.tipo === TIPO_OPERACION.MODULO){
-        console.log("modulo")
+        //console.log("modulo")
         return modulo(_expresion.opIzq, _expresion.opDer, _ambito)
     
     }else if(_expresion.tipo === TIPO_OPERACION.UNARIA){
-        console.log("unaria")
+        //console.log("unaria")
         return unaria(_expresion.opDer, _ambito)
     }else{
         const Operacion = require("./Operacion")
@@ -334,7 +334,7 @@ function division(_opizq, _opDer, _ambito) {
                 opIzq.tipo === TIPO_DATO.DECIMAL && opDer.tipo === TIPO_DATO.ENTERO || opIzq.tipo === TIPO_DATO.DECIMAL && opDer.tipo === TIPO_DATO.DECIMAL){
                     const resultado = Number(opIzq.valor) / Number(opDer.valor);
                     return {
-                        valor: resultado.toFixed(2),
+                        valor: resultado,
                         tipo: TIPO_DATO.DECIMAL,
                         linea: _opizq.linea,
                         columna: _opizq.columna
