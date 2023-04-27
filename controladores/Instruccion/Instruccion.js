@@ -211,6 +211,32 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
-    },
+    },nuevaFuncion: function(_tipof, _nombre, _lista_parametros, _instrucciones, _rexpresion ,_linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.DEC_FUNCION,
+            tipof: _tipof,
+            nombre: _nombre,
+            lista_parametros : _lista_parametros,
+            instrucciones: _instrucciones,
+            rexpresion: _rexpresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevaEjecFuncion: function(_nombre, _lista_valores, _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.EJE_FUNCION,
+            nombre: _nombre,
+            lista_valores:_lista_valores,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoReturn: function(_expresion, _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.RETURN,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    }
 }
 module.exports = Instruccion;

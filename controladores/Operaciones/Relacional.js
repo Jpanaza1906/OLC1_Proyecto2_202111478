@@ -5,6 +5,7 @@ const TIPO_VALOR = require("../Enums/TipoValor");
 const Aritmetica = require("./Aritmetica");
 const Logica = require("./OpLogica");
 const ValorExpresion = require("./ValorExpresion");
+const FuncionOp = require("./EjeFuncion")
 
 function Relacional(_expresion,_ambito){
     if (_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.BOOL || _expresion.tipo === TIPO_VALOR.ENTERO 
@@ -36,6 +37,12 @@ function Relacional(_expresion,_ambito){
     }
     else if (_expresion.tipo === TIPO_OPERACION.MAYORIGUAL){
         return mayorigual(_expresion.opIzq, _expresion.opDer, _ambito)
+    }
+    else if(_expresion.tipo === TIPO_INSTRUCCION.EJE_FUNCION){
+        return FuncionOp(_expresion,_ambito)
+    }else{
+        const Operacion = require("./Operacion")
+        return Operacion(_expresion,_ambito)
     }
 }
 
@@ -174,7 +181,6 @@ function menorigual(_opIzq, _opDer, _ambito){
 function mayor(_opIzq, _opDer, _ambito){
     const opIzq = Relacional(_opIzq, _ambito)
     const opDer = Relacional(_opDer, _ambito)
-
      //console.log(opIzq.tipo,opDer.tipo)
     if ((opIzq.tipo == TIPO_DATO.ENTERO && opDer.tipo == TIPO_DATO.ENTERO)
         || (opIzq.tipo == TIPO_DATO.ENTERO && opDer.tipo == TIPO_DATO.DECIMAL) || (opIzq.tipo == TIPO_DATO.ENTERO && opDer.tipo == TIPO_DATO.CHAR)

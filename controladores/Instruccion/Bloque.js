@@ -75,7 +75,6 @@ function Bloque(_instrucciones,_ambito){
             var mensaje = ejec.cadena
             if(mensaje != null) {cadena += mensaje}
         } else if(instruccion.tipo === TIPO_INSTRUCCION.EJE_METODO){
-
             var mensaje = EjecMetodo(instruccion, _ambito)
             if (mensaje != null) { cadena += mensaje }
         }

@@ -1,6 +1,7 @@
 const Instruccion = require("./Instruccion");
 const DecParametro = require("./DecParametro");
-
+const TIPO_VALOR = require("../Enums/TipoValor")
+const Ambito = require("../Ambito/Ambito");
 
 function EjecMetodo(_instruccion, _ambito) {
     var metodoEjecutar = _ambito.getMetodo(_instruccion.nombre)
@@ -11,12 +12,20 @@ function EjecMetodo(_instruccion, _ambito) {
 
        if (metodoEjecutar.lista_parametro != null) {
             if (_instruccion.lista_valores != null && metodoEjecutar.lista_parametro.length == _instruccion.lista_valores.length) {
+                var nuevoAmbito = new Ambito(_ambito, "METODO")                
                 var error = false;
                 for (let i = 0; i < metodoEjecutar.lista_parametro.length; i++) {
-
-                    var declaracionAsignacion = Instruccion.nuevaDeclaracion(metodoEjecutar.lista_parametro[i].id, _instruccion.lista_valores[i], metodoEjecutar.lista_parametro[i].tipo_dato, _instruccion.linea, _instruccion.columna)
-                    var mensaje = DecParametro(declaracionAsignacion, _ambito)
-
+                    if(_instruccion.lista_valores[i].tipo === TIPO_VALOR.IDENTIFICADOR){                    
+                        if(_ambito.existeSimbolo(_instruccion.lista_valores[i].valor)){                                                  
+                            var declaracionAsignacion = Instruccion.nuevaDeclaracion(metodoEjecutar.lista_parametro[i].id, _instruccion.lista_valores[i], metodoEjecutar.lista_parametro[i].tipo_dato, _instruccion.linea, _instruccion.columna)                            
+                            var mensaje = DecParametro(declaracionAsignacion, nuevoAmbito)
+                        }
+                    }
+                    else{
+                        var declaracionAsignacion = Instruccion.nuevaDeclaracion(metodoEjecutar.lista_parametro[i].id, _instruccion.lista_valores[i], metodoEjecutar.lista_parametro[i].tipo_dato, _instruccion.linea, _instruccion.columna)
+                        var mensaje = DecParametro(declaracionAsignacion, nuevoAmbito)
+                    }
+                    
                     if (mensaje != null) {
                         error = true
                         cadena += mensaje + "\n"
@@ -25,8 +34,8 @@ function EjecMetodo(_instruccion, _ambito) {
                 }
 
                 if (error) { return cadena }
-                var ejec = Bloque(metodoEjecutar.instrucciones, _ambito)
-                var mensaje = ejec.cadena
+                var ejec = Bloque(metodoEjecutar.instrucciones, nuevoAmbito)
+                var mensaje = ejec.cadena                
                 return mensaje
 
             }else{

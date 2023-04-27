@@ -1,5 +1,6 @@
 const Simbolo = require("../Ambito/Simbolo");
 const TIPO_DATO = require("../Enums/TipoDato")
+const TIPO_VALOR = require("../Enums/TipoValor")
 
 
 function DecParametro(_instruccion, _ambito) {
@@ -18,7 +19,8 @@ function DecParametro(_instruccion, _ambito) {
         const nuevoSimbolo = new Simbolo(_instruccion.id, valor, TIPO_DATO.DECIMAL, _instruccion.linea, _instruccion.columna)
 
         if (_ambito.existeSimboloAmbitoActual(nuevoSimbolo.id) != false) {
-            return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
+            _ambito.actualizar(nuevoSimbolo.id, nuevoSimbolo)
+            //return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
         } else {
             _ambito.addSimbolo(nuevoSimbolo.id, nuevoSimbolo)
             // console.log(_ambito)
@@ -37,7 +39,8 @@ function DecParametro(_instruccion, _ambito) {
         const nuevoSimbolo = new Simbolo(_instruccion.id, valor, TIPO_DATO.ENTERO, _instruccion.linea, _instruccion.columna)
 
         if (_ambito.existeSimboloAmbitoActual(nuevoSimbolo.id) != false) {
-            return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
+            _ambito.actualizar(nuevoSimbolo.id, nuevoSimbolo)
+            //return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
         } else {
             _ambito.addSimbolo(nuevoSimbolo.id, nuevoSimbolo)
             // console.log(_ambito)
@@ -56,8 +59,8 @@ function DecParametro(_instruccion, _ambito) {
         const nuevoSimbolo = new Simbolo(_instruccion.id, valor, TIPO_DATO.CHAR, _instruccion.linea, _instruccion.columna)
 
         if (_ambito.existeSimboloAmbitoActual(nuevoSimbolo.id) != false) {
-
-            return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
+            _ambito.actualizar(nuevoSimbolo.id, nuevoSimbolo)
+            //return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
         } else {
             _ambito.addSimbolo(nuevoSimbolo.id, nuevoSimbolo)
             // console.log(_ambito)
@@ -78,8 +81,8 @@ function DecParametro(_instruccion, _ambito) {
         const nuevoSimbolo = new Simbolo(_instruccion.id, valor, TIPO_DATO.BOOL, _instruccion.linea, _instruccion.columna)
 
         if (_ambito.existeSimboloAmbitoActual(nuevoSimbolo.id) != false) {
-
-            return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
+            _ambito.actualizar(nuevoSimbolo.id, nuevoSimbolo)
+            //return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
         } else {
 
             _ambito.addSimbolo(nuevoSimbolo.id, nuevoSimbolo)
@@ -100,14 +103,14 @@ function DecParametro(_instruccion, _ambito) {
         const nuevoSimbolo = new Simbolo(_instruccion.id, valor, TIPO_DATO.CADENA, _instruccion.linea, _instruccion.columna)
 
         if (_ambito.existeSimboloAmbitoActual(nuevoSimbolo.id) != false) {
-
-            return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
+            _ambito.actualizar(nuevoSimbolo.id, nuevoSimbolo)
+            //return "Error: La variable " + nuevoSimbolo.id + " ya existe linea: " + nuevoSimbolo.linea + " columna: " + nuevoSimbolo.columna;
         } else {
 
             _ambito.addSimbolo(nuevoSimbolo.id, nuevoSimbolo)
             // console.log(_ambito)
             return null
         }
-    }
+    } 
 }
 module.exports = DecParametro

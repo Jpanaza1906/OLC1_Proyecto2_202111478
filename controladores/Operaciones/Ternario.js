@@ -26,6 +26,9 @@ function Ternario(_expresion, _ambito) {
     }
     else if (_expresion.tipo === TIPO_OPERACION.TERNARIO) {
         return TernarioOp(_expresion.opIzq, _expresion.opMed, _expresion.opDer, _ambito)
+    }else{
+        const Operacion = require("./Operacion")
+        return Operacion(_expresion,_ambito)
     }
 }
 function TernarioOp(_opIzq, _opMed, _opDer, _ambito) {

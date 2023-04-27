@@ -18,6 +18,7 @@
 "case"                  return 'Rcase'
 "default"               return 'Rdefault'
 "break"                 return 'Rbreak'
+"return"                return 'Rreturn'
 "for"                   return 'Rfor'
 "while"                 return 'Rwhile'
 "do"                    return 'Rdo'
@@ -80,6 +81,7 @@
 %}
 
 /* operator associations and precedence */
+%left 'Rreturn'
 %left 'or'
 %left 'and'
 %right 'not'
@@ -104,11 +106,16 @@ OPCIONESCUERPO: OPCIONESCUERPO CUERPO{$1.push($2); $$=$1;}
 CUERPO: DEC_VAR ptcoma {$$=$1;}                               //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
         |ASIG_VAR ptcoma {$$=$1;}
         |METODOS {$$=$1;}
+        |FUNCIONES {$$=$1;}
         |MAIN {$$=$1;} 
         ;
 
 METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, null, $6, this._$.first_line,this._$.first_column+1)} 
         | Rvoid identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, $4, $7, this._$.first_line,this._$.first_column+1)}
+;
+
+FUNCIONES: TIPO identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES Rreturn EXPRESION ptcoma llaveC {$$ = INSTRUCCION.nuevaFuncion($1,$2,$4,$7,$9, this._$.first_line , this._$.first_column+1)}
+        |  TIPO identificador parA LIST_PARAMETROS parC llaveA Rreturn EXPRESION ptcoma llaveC {$$ = INSTRUCCION.nuevaFuncion($1,$2,$4,null,$8, this._$.first_line , this._$.first_column+1)}
 ;
 
 LIST_PARAMETROS: LIST_PARAMETROS coma PARAMETROS {$1.push($3); $$=$1;}  
@@ -157,6 +164,7 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |INCREMENTOYDECREMENTO ptcoma {$$=$1;}
         |LISTA {$$=$1;}
         |SWITCH {$$=$1;}
+
 ;
 
 METODO_INSTR_SINPARAMETROS: identificador parA parC { $$ = INSTRUCCION.nuevoEjecMetodo($1, null, this._$.first_line,this._$.first_column+1) }
@@ -209,6 +217,7 @@ INCREMENTOYDECREMENTO: identificador masmas {$$ =  INSTRUCCION.nuevoIncremento($
 ;
 
 EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}
+         | identificador parA PARAMETROS_LLAMADA parC { $$ = INSTRUCCION.nuevaEjecFuncion($1, $3, this._$.first_line,this._$.first_column+1) }  
          | parA TIPO parC EXPRESION %prec ucasteo {$$ = INSTRUCCION.nuevoCasteo($2,$4,this._$.first_line, this._$.first_column+1);}
          | EXPRESION inter EXPRESION dospuntos EXPRESION {$$ = INSTRUCCION.nuevoTernario($1, $3, $5, TIPO_OPERACION.TERNARIO,this._$.first_line, this._$.first_column+1);}
          | EXPRESION menos EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.RESTA,this._$.first_line, this._$.first_column+1);}

@@ -23,6 +23,9 @@ function Logica(_expresion, _ambito) {
     }
     else if (_expresion.tipo === TIPO_OPERACION.NOT){
         return not(_expresion.opDer, _ambito)
+    }else{
+        const Operacion = require("./Operacion")
+        return Operacion(_expresion,_ambito)
     }
     // a<5 || b>10
 }

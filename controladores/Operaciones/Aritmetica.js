@@ -1,9 +1,8 @@
 const TIPO_DATO = require("../Enums/TipoDato")
-const TIPO_INSTRUCCION = require("../Enums/TipoInstruccion")
 const TIPO_OPERACION = require("../Enums/TipoOperacion")
 const TIPO_VALOR = require("../Enums/TipoValor")
 const TipoResultado = require("./TipoResultado")
-const ValorExpresion = require("./ValorExpresion")   
+const ValorExpresion = require("./ValorExpresion")  
 
 function Aritmetica(_expresion,_ambito){
     if (_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.BOOL || _expresion.tipo === TIPO_VALOR.ENTERO ||
@@ -37,6 +36,9 @@ function Aritmetica(_expresion,_ambito){
     }else if(_expresion.tipo === TIPO_OPERACION.UNARIA){
         console.log("unaria")
         return unaria(_expresion.opDer, _ambito)
+    }else{
+        const Operacion = require("./Operacion")
+        return Operacion(_expresion,_ambito)
     }
 }
 
@@ -332,8 +334,8 @@ function division(_opizq, _opDer, _ambito) {
                 opIzq.tipo === TIPO_DATO.DECIMAL && opDer.tipo === TIPO_DATO.ENTERO || opIzq.tipo === TIPO_DATO.DECIMAL && opDer.tipo === TIPO_DATO.DECIMAL){
                     const resultado = Number(opIzq.valor) / Number(opDer.valor);
                     return {
-                        valor: resultado,
-                        tipo: tipores,
+                        valor: resultado.toFixed(2),
+                        tipo: TIPO_DATO.DECIMAL,
                         linea: _opizq.linea,
                         columna: _opizq.columna
 

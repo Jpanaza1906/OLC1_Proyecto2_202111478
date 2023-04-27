@@ -100,7 +100,7 @@ class Graficador{
                 for(const ncase of cases){
                     let casen = "Nodo" + this.contador
                     this.contador++;
-                    this.grafo += casen + `[label = \"${"CASE"} \n ${ncase.expresion.valor}\"];\n`;
+                    this.grafo += casen + `[label = \"${"CASE"} \n ${ncase.expresion.valor}\"];\n`
                     this.grafo += nombreHijo + "->" + casen + ";\n"
                     const instruccionescase = ncase.instrucciones
                     console.log(instruccionescase)
@@ -108,6 +108,44 @@ class Graficador{
                         this.graphInstruccionindividual(nins, casen)
                     }
                 }
+            }
+            else if(instruccion.tipo === TIPO_INSTRUCCION.WHILE){
+                var nombreHijo = "Nodo" + this.contador                
+                this.contador++
+                this.grafo += nombreHijo + "[label = \"WHILE\"];\n"
+                this.grafo += _padre + "->" + nombreHijo + ";\n"
+                this.graficarOperacion(instruccion.expresion,nombreHijo)
+                const instruccioneswhile = instruccion.instrucciones 
+                let exp = "Nodo" + this.contador
+                this.contador++
+                this.grafo += exp + "[label = \"INSTRUCCIONES\"];\n"
+                this.grafo += nombreHijo + "->" + exp +";\n"
+                this.grafo += exp + "->" + nombreHijo +";\n"
+                for(const ninstruccion of instruccioneswhile){
+                    this.graphInstruccionindividual(ninstruccion,exp)
+                }
+
+            }
+            else if(instruccion.tipo === TIPO_INSTRUCCION.DOWHILE){
+                var nombreHijo = "Nodo" + this.contador                
+                this.contador++
+                this.grafo += nombreHijo + "[label = \"DO\"];\n"
+                this.grafo += _padre + "->" + nombreHijo + ";\n"
+                let ins = "Nodo" + this.contador
+                this.contador++
+                this.grafo += ins + "[label = \"INSTRUCCIONES\"];\n"
+                this.grafo += nombreHijo + "->" + ins + ";\n"
+                const instruccionesdo = instruccion.instrucciones 
+                for(const ninstruccion of instruccionesdo){
+                    this.graphInstruccionindividual(ninstruccion,ins)
+                }
+                let we = "Nodo" + this.contador
+                this.contador++
+                this.grafo += we + "[label = \"WHILE\"];\n"
+                this.grafo += nombreHijo + "->" + we + ";\n"
+                this.grafo += we + "->" + nombreHijo + ";\n"
+                this.graficarOperacion(instruccion.expresion, we)
+
             }
             /*
             COLOCAR TODAVIA LO QUE RESTA DE BLOQUE

@@ -28,13 +28,13 @@ function Casteo(_expresion, _ambito){
     else if(_expresion.tipo === TIPO_OPERACION.AND || _expresion.tipo === TIPO_OPERACION.OR || _expresion.tipo === TIPO_OPERACION.NOT){
         return Logica(_expresion, _ambito)
     }
-    //      OPERADOR TERNARIO
-    else if(_expresion.tipo === TIPO_OPERACION.TERNARIO){        
-        return Ternario(_expresion, _ambito)
-    }
     //      CASTEO
     else if(_expresion.tipo === TIPO_INSTRUCCION.CASTEO){
         return CasteoOp(_expresion.tipoC, _expresion.expresion, _ambito)
+    }
+    else{
+        const Operacion = require("./Operacion")
+        return Operacion(_expresion,_ambito)
     }
 }
 function CasteoOp(_tipoC, _expresion, _ambito){
