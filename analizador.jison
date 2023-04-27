@@ -164,6 +164,8 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |INCREMENTOYDECREMENTO ptcoma {$$=$1;}
         |LISTA {$$=$1;}
         |SWITCH {$$=$1;}
+        |Rreturn ptcoma{$$ = INSTRUCCION.nuevoReturn(null, this._$.first_line,this._$.first_column+1)}
+        |Rreturn EXPRESION ptcoma {$$ = INSTRUCCION.nuevoReturn($2, this._$.first_line,this._$.first_column+1) }
 
 ;
 

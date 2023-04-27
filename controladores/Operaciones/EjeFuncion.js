@@ -57,6 +57,16 @@ function FuncionOp(_expresion, _ambito){
             if(funcionEjecutar.instrucciones != null){                
                 const Bloque = require("../Instruccion/Bloque");
                 var ejec = Bloque(funcionEjecutar.instrucciones, nuevoAmbito)
+                try {
+                    var returnrespuesta = JSON.parse(ejec.cadena)
+                    if(returnrespuesta.tipo == TIPO_INSTRUCCION.RETURN){
+                        if(returnrespuesta.expresion != null){
+                            return EjeFuncion(returnrespuesta.expresion, nuevoAmbito)
+                        }
+                    }
+                  } catch (error) {
+                    
+                  }
             }
             return EjeFuncion(funcionEjecutar.rexpresion,nuevoAmbito)
         }else{

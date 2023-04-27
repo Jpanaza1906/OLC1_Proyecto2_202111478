@@ -77,6 +77,9 @@ function Bloque(_instrucciones,_ambito){
         } else if(instruccion.tipo === TIPO_INSTRUCCION.EJE_METODO){
             var mensaje = EjecMetodo(instruccion, _ambito)
             if (mensaje != null) { cadena += mensaje }
+        } else if(instruccion.tipo === TIPO_INSTRUCCION.RETURN){
+            cadena = JSON.stringify(instruccion)
+            return;
         }
     });
     return { cadena:cadena }
