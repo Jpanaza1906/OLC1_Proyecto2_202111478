@@ -29,6 +29,14 @@
 "false"                 return 'Rfalse'
 "main"                  return 'Rmain'
 "new"                   return 'Rnew'
+"toLower"               return 'RtoLower'
+"toUpper"               return 'RtoUpper'
+"length"                return 'Rlength'
+"truncate"              return 'Rtruncate'
+"round"                 return 'Rround'
+"typeof"                return 'Rtypeof'
+"toString"              return 'RtoString'
+"toCharArray"           return 'RtoCharArray'
 [0-9]+("."[0-9]+)\b    return 'decimal'
 "."                     return 'punto'
 [0-9]+\b                return 'entero'
@@ -218,7 +226,15 @@ INCREMENTOYDECREMENTO: identificador masmas {$$ =  INSTRUCCION.nuevoIncremento($
                      | identificador menosmenos {$$ =  INSTRUCCION.nuevoDecremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1, TIPO_OPERACION.RESTA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
 ;
 
-EXPRESION: EXPRESION suma EXPRESION{$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}
+EXPRESION: EXPRESION suma EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.SUMA,this._$.first_line, this._$.first_column+1);}
+         | RtoLower parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TOLOWER,$3,this._$.first_line, this._$.first_column+1)}
+         | RtoUpper parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TOUPPER,$3,this._$.first_line, this._$.first_column+1)}
+         | Rlength parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.LENGTH,$3,this._$.first_line, this._$.first_column+1)}
+         | Rtruncate parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TRUNCATE,$3,this._$.first_line, this._$.first_column+1)}
+         | Rround parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.ROUND,$3,this._$.first_line, this._$.first_column+1)}
+         | Rtypeof parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TYPEOF,$3,this._$.first_line, this._$.first_column+1)}
+         | RtoString parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TOSTRING,$3,this._$.first_line, this._$.first_column+1)}
+         | RtoCharArray parA EXPRESION parC {$$ = INSTRUCCION.nuevaNativa(TIPO_OPERACION.TOCHARARRAY,$3,this._$.first_line, this._$.first_column+1)}
          | identificador parA PARAMETROS_LLAMADA parC { $$ = INSTRUCCION.nuevaEjecFuncion($1, $3, this._$.first_line,this._$.first_column+1) }  
          | parA TIPO parC EXPRESION %prec ucasteo {$$ = INSTRUCCION.nuevoCasteo($2,$4,this._$.first_line, this._$.first_column+1);}
          | EXPRESION inter EXPRESION dospuntos EXPRESION {$$ = INSTRUCCION.nuevoTernario($1, $3, $5, TIPO_OPERACION.TERNARIO,this._$.first_line, this._$.first_column+1);}

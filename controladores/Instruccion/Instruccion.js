@@ -237,6 +237,13 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
+    },nuevaNativa: function(_tipo, _expresion, _linea, _columna){
+        return{
+            tipo: _tipo,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
     }
 }
 module.exports = Instruccion;

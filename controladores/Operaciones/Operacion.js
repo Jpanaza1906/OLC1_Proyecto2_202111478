@@ -8,6 +8,7 @@ const Ternario = require("./Ternario");
 const ValorExpresion = require("./ValorExpresion");
 const Casteo = require("./Casteo");
 const FuncionOp = require("./EjeFuncion");
+const Nativa = require("./Nativa")
 
 function Operacion(_expresion,_ambito){
     if(_expresion.tipo === TIPO_VALOR.DECIMAL || _expresion.tipo === TIPO_VALOR.BOOL || _expresion.tipo === TIPO_VALOR.ENTERO||
@@ -38,9 +39,15 @@ function Operacion(_expresion,_ambito){
     else if(_expresion.tipo === TIPO_INSTRUCCION.CASTEO){
         return Casteo(_expresion, _ambito)
     }
+    //  EJECUTAR FUNCION
     else if(_expresion.tipo === TIPO_INSTRUCCION.EJE_FUNCION){        
         return FuncionOp(_expresion,_ambito)
     }
-
+    //    OPERACIONES NATIVAS
+    else if(_expresion.tipo === TIPO_OPERACION.TOLOWER || _expresion.tipo === TIPO_OPERACION.TOUPPER || _expresion.tipo === TIPO_OPERACION.LENGTH ||
+        _expresion.tipo === TIPO_OPERACION.TRUNCATE || _expresion.tipo === TIPO_OPERACION.ROUND || _expresion.tipo === TIPO_OPERACION.TYPEOF ||
+        _expresion.tipo === TIPO_OPERACION.TOSTRING || _expresion.tipo === TIPO_OPERACION.TOCHARARRAY){
+        return Nativa(_expresion, _ambito)
+    }
 }
 module.exports = Operacion;  
