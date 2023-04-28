@@ -11,10 +11,28 @@ function SentenciaDoWhile(_instruccion, _ambito){
             var nuevoAmbito = new Ambito(_ambito, "DOWHILE")
             const Bloque = require("./Bloque")
             //Realizar las intrucciones
-            var eje = Bloque(_instruccion.instrucciones,nuevoAmbito)
-            mensaje += eje.cadena     
+            var eje = Bloque(_instruccion.instrucciones,nuevoAmbito)           
+            mensaje += eje.cadena 
+            try{
+                if(eje.break){
+                    return{
+                        cadena:mensaje
+                    }
+                }
+            }
+            catch(error){
+    
+            }    
             //refrescar el valor de la condicion
             operacion = Operacion(_instruccion.expresion,_ambito)
+            try{
+                if(eje.continue){
+                    continue;
+                }
+            }
+            catch(error){
+    
+            }
         }
         return{
             cadena:mensaje

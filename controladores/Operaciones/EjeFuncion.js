@@ -59,14 +59,14 @@ function FuncionOp(_expresion, _ambito){
                 var ejec = Bloque(funcionEjecutar.instrucciones, nuevoAmbito)
                 try {
                     var returnrespuesta = JSON.parse(ejec.cadena)
-                    if(returnrespuesta.tipo == TIPO_INSTRUCCION.RETURN){
-                        if(returnrespuesta.expresion != null){
+                    if (returnrespuesta.tipo == TIPO_INSTRUCCION.RETURN) {
+                        if (returnrespuesta.expresion != null) {
                             return EjeFuncion(returnrespuesta.expresion, nuevoAmbito)
                         }
                     }
-                  } catch (error) {
-                    
-                  }
+                } catch (error) {
+
+                }
             }
             return EjeFuncion(funcionEjecutar.rexpresion,nuevoAmbito)
         }else{

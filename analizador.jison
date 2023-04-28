@@ -19,6 +19,7 @@
 "default"               return 'Rdefault'
 "break"                 return 'Rbreak'
 "return"                return 'Rreturn'
+"continue"              return 'Rcontinue'
 "for"                   return 'Rfor'
 "while"                 return 'Rwhile'
 "do"                    return 'Rdo'
@@ -174,8 +175,11 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |SWITCH {$$=$1;}
         |Rreturn ptcoma{$$ = INSTRUCCION.nuevoReturn(null, this._$.first_line,this._$.first_column+1)}
         |Rreturn EXPRESION ptcoma {$$ = INSTRUCCION.nuevoReturn($2, this._$.first_line,this._$.first_column+1) }
+        |Rbreak ptcoma{$$ = INSTRUCCION.nuevoBreak(this._$.first_line,this._$.first_column+1)}
+        |Rcontinue ptcoma{$$ = INSTRUCCION.nuevoContinue(this._$.first_line,this._$.first_column+1)}
 
 ;
+
 
 METODO_INSTR_SINPARAMETROS: identificador parA parC { $$ = INSTRUCCION.nuevoEjecMetodo($1, null, this._$.first_line,this._$.first_column+1) }
 ;

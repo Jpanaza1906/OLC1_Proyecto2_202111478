@@ -15,7 +15,6 @@ function SentenciaFor(_instruccion, _ambito){
         6. Si operacion.valor == falso, se rompera el ciclo porque ya cumplio su condicion
     */
 
-    //                  ----------PASO 1----------
     const Bloque = require("./Bloque");
     var nuevoAmbito = new Ambito(_ambito, "FOR");
 
@@ -24,12 +23,13 @@ function SentenciaFor(_instruccion, _ambito){
     condicion.opIzq.tipo = 'VAL_ENTERO'
 
     //                  ----------PASO 2----------
-    var mensajeDeclaracion = Declaracion(_instruccion.declaracion, nuevoAmbito)    
-    if(mensajeDeclaracion != null) { return {cadena: mensajeDeclaracion} }
+    var mensajeDeclaracion = Declaracion(_instruccion.declaracion, nuevoAmbito)
+    if (mensajeDeclaracion != null) { return { cadena: mensajeDeclaracion } }
     var mensaje = ""
-
-    while(true){
         // PASO 3----------
+    while(true){
+         //                  ----------PASO 1----------
+        
         var val_variable = nuevoAmbito.getSimbolo(_instruccion.declaracion.id).valor
 
         //CAMBIO EL OPERADOR IZQUIERDO DE LA CONDICION QUE ESTA DE FORMA (EJEM: i < 10)
@@ -43,13 +43,31 @@ function SentenciaFor(_instruccion, _ambito){
         if(!operacion.valor){
             return{ cadena: mensaje }
         }
-
+        var nuevoAmbitoIns = new Ambito(nuevoAmbito,"INSTRUCCIONFOR")
         // REALIZA LA INSTRUCCION QUE SE ENCUENTRA DENTRO DEL FOR
-        var ejec = Bloque(_instruccion.instrucciones, nuevoAmbito)
-        mensaje += ejec.cadena;
+        var ejec = Bloque(_instruccion.instrucciones, nuevoAmbitoIns)
+        try{
+            mensaje += ejec.cadena;
+            if(ejec.break){
+                return{
+                    cadena:mensaje
+                }
+            }
+        }
+        catch(error){
 
+        }
         //              ----------PASO 5----------
-        incrementoYdecremento(_instruccion.actualizacion, nuevoAmbito)
+        incrementoYdecremento(_instruccion.actualizacion, nuevoAmbito)       
+        
+        try{
+            if(eje.continue){
+                continue;
+            }
+        }
+        catch(error){
+
+        }
     }
 }
 

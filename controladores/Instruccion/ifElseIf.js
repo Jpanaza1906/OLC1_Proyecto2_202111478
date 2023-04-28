@@ -12,6 +12,28 @@ function SentenciaIfElseIf(_instruccion, _ambito) {
             const Bloque = require("./Bloque");
             var ejec = Bloque(_instruccion.instruccionesIf, nuevoAmbito)
             mensaje += ejec.cadena
+            try{
+                if(ejec.break){
+                    return{
+                        cadena:mensaje,
+                        break:true
+                    }
+                }
+            }
+            catch(error){
+    
+            }
+            try{
+                if(ejec.continue){
+                    return{
+                        cadena:mensaje,
+                        continue:true
+                    }
+                }
+            }
+            catch(error){
+    
+            }
             return {
                 cadena: mensaje
             }
@@ -26,6 +48,28 @@ function SentenciaIfElseIf(_instruccion, _ambito) {
                     const Bloque = require("./Bloque");
                     var ejec = Bloque(_instruccion.lista_elseif[i].instruccionesElseIf, nuevoAmbito)
                     mensaje += ejec.cadena
+                    try{
+                        if(ejec.break){
+                            return{
+                                cadena:mensaje,
+                                break:true
+                            }
+                        }
+                    }
+                    catch(error){
+            
+                    }
+                    try{
+                        if(ejec.continue){
+                            return{
+                                cadena:mensaje,
+                                continue:true
+                            }
+                        }
+                    }
+                    catch(error){
+            
+                    }
                     return {
                         cadena: mensaje
                     }
@@ -38,6 +82,28 @@ function SentenciaIfElseIf(_instruccion, _ambito) {
             var ejec = Bloque(_instruccion.instruccionesElse, nuevoAmbito)
 
             mensaje += ejec.cadena
+            try{
+                if(ejec.break){
+                    return{
+                        cadena:mensaje,
+                        break:true
+                    }
+                }
+            }
+            catch(error){
+    
+            }
+            try{
+                if(ejec.continue){
+                    return{
+                        cadena:mensaje,
+                        continue:true
+                    }
+                }
+            }
+            catch(error){
+    
+            }
         }
         return {
             cadena: mensaje
