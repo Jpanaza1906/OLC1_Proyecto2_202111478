@@ -1,7 +1,7 @@
 const TIPO_DATO = require("../Enums/TipoDato")
 const TIPO_OPERACION = require("../Enums/TipoOperacion")
 const TIPO_VALOR = require("../Enums/TipoValor")
-
+//hola
 function Nativa(_expresion, _ambito){
     if(_expresion.tipo === TIPO_OPERACION.TOLOWER){
         return optoLower(_expresion.expresion,_ambito)
