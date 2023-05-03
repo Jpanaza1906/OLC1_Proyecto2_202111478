@@ -30,6 +30,7 @@
 "false"                 return 'Rfalse'
 "main"                  return 'Rmain'
 "new"                   return 'Rnew'
+"add"                   return 'Radd'
 "toLower"               return 'RtoLower'
 "toUpper"               return 'RtoUpper'
 "length"                return 'Rlength'
@@ -76,12 +77,14 @@
 
 <<EOF>>               return 'EOF'
 .                     {
-        
+        const AgregarError = require('./controladores/Ambito/Error')
+        AgregarError("Lexico","Existe un caracter que no existe en el lenguaje", yytext, yylloc.first_line, yylloc.first_column)
         console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
 }
 
 /lex
 %{
+        const AgregarError = require('./controladores/Ambito/Error')
         const TIPO_OPERACION= require('./controladores/Enums/TipoOperacion');
         const TIPO_VALOR = require('./controladores/Enums/TipoValor');
         const TIPO_DATO= require('./controladores/Enums/TipoDato');
@@ -117,7 +120,10 @@ CUERPO: DEC_VAR ptcoma {$$=$1;}                               //DECLARACION DE C
         |METODOS {$$=$1;}
         |FUNCIONES {$$=$1;}
         |MAIN {$$=$1;} 
-        ;
+        |DEC_ESTRUCT {$$=$1}
+        |MODVECTOR {$$=$1}
+        |LISTA {$$=$1}
+;
 
 METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, null, $6, this._$.first_line,this._$.first_column+1)} 
         | Rvoid identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoMetodo($2, $4, $7, this._$.first_line,this._$.first_column+1)}
@@ -125,6 +131,7 @@ METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUC
 
 FUNCIONES: TIPO identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES Rreturn EXPRESION ptcoma llaveC {$$ = INSTRUCCION.nuevaFuncion($1,$2,$4,$7,$9, this._$.first_line , this._$.first_column+1)}
         |  TIPO identificador parA LIST_PARAMETROS parC llaveA Rreturn EXPRESION ptcoma llaveC {$$ = INSTRUCCION.nuevaFuncion($1,$2,$4,null,$8, this._$.first_line , this._$.first_column+1)}
+        |  error llaveC {AgregarError("Sintactico","La funcion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 LIST_PARAMETROS: LIST_PARAMETROS coma PARAMETROS {$1.push($3); $$=$1;}  
@@ -145,9 +152,11 @@ PARAMETROS_LLAMADA: PARAMETROS_LLAMADA coma EXPRESION {$$ = $1; $1.push($3);}
 
 DEC_VAR: TIPO identificador  {$$= INSTRUCCION.nuevaDeclaracion($2,null, $1,this._$.first_line, this._$.first_column+1)}
         |TIPO identificador igual EXPRESION  {$$= INSTRUCCION.nuevaDeclaracion($2, $4, $1,this._$.first_line, this._$.first_column+1);}
-        ;
+        |TIPO error ptcoma {AgregarError("Sintactico","La declaracion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
+;
 
 ASIG_VAR: identificador igual EXPRESION {$$ = INSTRUCCION.nuevaAsignacion($1, $3,this._$.first_line, this._$.first_column+1)}
+        | identificador igual error ptcoma {AgregarError("Sintactico","La asignacion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 TIPO: Rint{$$= TIPO_DATO.ENTERO}
@@ -158,7 +167,8 @@ TIPO: Rint{$$= TIPO_DATO.ENTERO}
 ;
 
 INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$$ = $1; $1.push($2);}
-            |INSTRUCCION {$$ = [$1];}
+            |INSTRUCCION {$$ = [$1];}            
+            | error ptcoma {AgregarError("Sintactico","Una instruccion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
@@ -177,9 +187,29 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |Rreturn EXPRESION ptcoma {$$ = INSTRUCCION.nuevoReturn($2, this._$.first_line,this._$.first_column+1) }
         |Rbreak ptcoma{$$ = INSTRUCCION.nuevoBreak(this._$.first_line,this._$.first_column+1)}
         |Rcontinue ptcoma{$$ = INSTRUCCION.nuevoContinue(this._$.first_line,this._$.first_column+1)}
-
+        |DEC_ESTRUCT {$$=$1}
+        |MODVECTOR {$$=$1}
+        |ADD_LIST {$$=$1}
 ;
 
+ADD_LIST: identificador punto Radd parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoAddList($1, $5, this._$.first_line, this._$.first_column+1)}
+        | identificador punto error ptcoma {AgregarError("Sintactico","La lista esta siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
+;
+
+DEC_ESTRUCT: TIPO corchA corchC identificador igual Rnew TIPO corchA EXPRESION corchC ptcoma {$$= INSTRUCCION.nuevoVectorVacio($1, $4,$7,$9,this._$.first_line, this._$.first_column+1)}
+           | TIPO corchA corchC identificador igual llaveA LISTA_VALORES llaveC ptcoma {$$= INSTRUCCION.nuevoVectorValores($1, $4,$7,this._$.first_line, this._$.first_column+1) }
+;
+
+LISTA_VALORES: LISTA_VALORES coma LISTAVALORES {$1.push($3); $$=$1;}
+                |LISTAVALORES {$$=[$1];}
+;
+
+
+LISTAVALORES: EXPRESION  {$$=$1} 
+;
+
+MODVECTOR: identificador corchA EXPRESION corchC igual EXPRESION ptcoma {$$= INSTRUCCION.modVectores($1, $3,$6,this._$.first_line, this._$.first_column+1) }
+;
 
 METODO_INSTR_SINPARAMETROS: identificador parA parC { $$ = INSTRUCCION.nuevoEjecMetodo($1, null, this._$.first_line,this._$.first_column+1) }
 ;
@@ -188,12 +218,14 @@ METODO_INSTR_PARAMETROS: identificador parA PARAMETROS_LLAMADA parC ptcoma { $$ 
 ;
 
 PRINT: Rprint parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoPrint($3, this._$.first_line,this._$.first_column+1);}
+        | Rprint error ptcoma {AgregarError("Sintactico","El print esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 //TIPOS DE IF
 IF: Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoIf($3, $6, this._$.first_line, this._$.first_column+1);}
         |Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC Relse llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoIfElse($3, $6, $10 , this._$.first_line,this._$.first_column+1)}
         | Rif parA EXPRESION parC llaveA INSTRUCCIONES  llaveC ELSEIF  {$$= INSTRUCCION.nuevoIfConElseIf($3, $6, $8, null, this._$.first_line,this._$.first_column+1)}
         | Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC ELSEIF Relse llaveA INSTRUCCIONES llaveC {$$= INSTRUCCION.nuevoIfConElseIf($3, $6, $8, $11, this._$.first_line,this._$.first_column+1)}
+        | Rif error llaveC {AgregarError("Sintactico","El if esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 ELSEIF:ELSEIF CONEIF {$1.push($2); $$=$1;}
       | CONEIF {$$=[$1];}
@@ -202,6 +234,7 @@ CONEIF: Relse Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCC
 ;
 //TIPOS DE SWTICH
 SWITCH: Rswitch parA EXPRESION parC llaveA CASES llaveC {$$ = INSTRUCCION.nuevoSwitch($3, $6, this._$.first_line, this._$.first_column+1)}
+        | Rswitch error llaveC {AgregarError("Sintactico","El switch esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 CASES: CASES CASEN {$1.push($2); $$=$1;}
@@ -215,15 +248,19 @@ CASE: Rcase EXPRESION {$$ = $2;}
 
 //CICLO FOR
 FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoFor($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)}
+   | Rfor error llaveC {AgregarError("Sintactico","El for esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 //CICLO WHILE
 WHILE: Rwhile parA EXPRESION parC llaveA INSTRUCCIONES llaveC {$$ = INSTRUCCION.nuevoWhile($3, $6, this._$.first_line, this._$.first_column+1);}
+   | Rwhile error llaveC {AgregarError("Sintactico","El while esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 //CICLO DO WHILE
 DOWHILE: Rdo llaveA INSTRUCCIONES llaveC Rwhile parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoDoWhile($7, $3, this._$.first_line, this._$.first_column+1);}
+        | Rdo error llaveC {AgregarError("Sintactico","El do while esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 //LISTAS
 LISTA: Rlist menor TIPO mayor identificador igual Rnew Rlist menor TIPO mayor ptcoma {$$= INSTRUCCION.nuevoLista($5, $3, this._$.first_line, this._$.first_column+1)}
+        | Rlist error ptcoma {AgregarError("Sintactico","La lista esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 INCREMENTOYDECREMENTO: identificador masmas {$$ =  INSTRUCCION.nuevoIncremento($1, $2, INSTRUCCION.nuevaOperacionBinaria($1, 1 ,TIPO_OPERACION.SUMA, this._$.first_line, this._$.first_column+1), this._$.first_line, this._$.first_column+1)}
@@ -258,6 +295,8 @@ EXPRESION: EXPRESION suma EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3
          | not EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria(null,$2, TIPO_OPERACION.NOT,this._$.first_line, this._$.first_column+1);}
          | parA EXPRESION parC {$$=$2}
          | EXPRESION igualigual EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.IGUALIGUAL,this._$.first_line, this._$.first_column+1);}
+         | ACCESOVEC {$$=$1}
+         | ACCESOLIST {$$=$1}
          | decimal {$$= INSTRUCCION.nuevoValor(Number($1),TIPO_VALOR.DECIMAL,this._$.first_line, this._$.first_column+1);}
          | entero {$$= INSTRUCCION.nuevoValor(Number($1),TIPO_VALOR.ENTERO,this._$.first_line, this._$.first_column+1);}
          | Rtrue {$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.BOOL,this._$.first_line, this._$.first_column+1);}
@@ -266,3 +305,7 @@ EXPRESION: EXPRESION suma EXPRESION {$$= INSTRUCCION.nuevaOperacionBinaria($1,$3
          | identificador{$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR,this._$.first_line, this._$.first_column+1);}
          | char {$$= INSTRUCCION.nuevoValor($1,TIPO_VALOR.CHAR,this._$.first_line, this._$.first_column+1);}
 ;    
+ACCESOVEC: identificador corchA EXPRESION corchC {$$= INSTRUCCION.nuevoAccesoVec($1, $3,this._$.first_line, this._$.first_column+1)}
+;
+ACCESOLIST: identificador corchA corchA EXPRESION corchC corchC {$$ = INSTRUCCION.nuevoAccesoList($1, $4,this._$.first_line, this._$.first_column+1)}
+;

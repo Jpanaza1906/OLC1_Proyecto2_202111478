@@ -256,6 +256,58 @@ const Instruccion ={
             linea: _linea,
             columna: _columna
         }
-    }
+    },nuevoVectorVacio: function (_tipo, _id, _tipoCreado, _tamanio, _linea, _columna) {
+        return {
+            tipo: TIPO_INSTRUCCION.VEC_VACIO,
+            tipoVec: _tipo,
+            id: _id,
+            tipoCreadoVec: _tipoCreado,
+            tamanio: _tamanio,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoVectorValores: function (_tipo, _id, _listaValores, _linea, _columna) {
+        return {
+            tipo: TIPO_INSTRUCCION.VEC_VALORES,
+            tipoVec: _tipo,
+            id: _id,
+            listaValores: _listaValores,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoAccesoVec: function(_id, _indice, _linea, _columna ){
+        return{
+            tipo_dato: TIPO_INSTRUCCION.ACCESO_VECTORES,
+            id:_id,
+            indice:_indice,
+            linea: _linea,
+            columna: _columna
+        }
+    },modVectores: function(_id, _posicion,_valor,_linea,_columna){
+        return{
+            tipo: TIPO_INSTRUCCION.MOD_VECTORES,
+            id:_id,
+            posicion:_posicion,
+            valor:_valor,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoAddList: function(_id, _expresion, _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.ADD_LIST,
+            id: _id,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },nuevoAccesoList: function(_id, _indice, _linea, _columna ){
+        return{
+            tipo_dato: TIPO_INSTRUCCION.ACCESO_LIST,
+            id:_id,
+            indice:_indice,
+            linea: _linea,
+            columna: _columna
+        }
+    },
 }
 module.exports = Instruccion;
