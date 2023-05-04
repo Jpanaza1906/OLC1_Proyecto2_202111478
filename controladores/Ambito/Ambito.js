@@ -1,3 +1,30 @@
+const RTSimbolos = require("./TabSimb");
+
+class TablaSimbolos {
+    constructor(identificador_, tipoSimbolo_, tipoVar_, entorno_, linea_, columna_){
+        this.identificador = identificador_;
+        this.tipoSimbolo = tipoSimbolo_;
+        this.tipoVar = tipoVar_;
+        this.entorno = entorno_;
+        this.linea = linea_;
+        this.columna = columna_;
+    }
+}
+
+function getEntornoCad(ambito_actual) {
+    let listaEntornos = []
+    amb = ambito_actual
+
+    while(amb != null){
+        listaEntornos.push(amb.nombre)
+        amb = amb.anterior
+    }
+
+    listaEntornos.reverse()
+    return (listaEntornos.length > 0 )? listaEntornos.join("_") : listaEntornos.join("");
+}
+
+
 class Ambito{
 
     constructor(_anterior, _actual){   // new Ambito(null, "global")
@@ -9,7 +36,22 @@ class Ambito{
 
     addSimbolo(_clave, _simbolo){ //agregar simbolo
         this.tablaSimbolos.set(_clave.toLowerCase(), _simbolo)  
+        let tabla = new TablaSimbolos(
+            _simbolo.id,
+            _simbolo.tipoSimbolo,
+            _simbolo.tipo, 
+            getEntornoCad(this),
+            _simbolo.linea,
+            _simbolo.columna
+        )
 
+        RTSimbolos.TabSimbolos.push(tabla)
+    }
+
+    recorrerTablaSimbolos(){
+        this.tablaSimbolos.forEach((valor, clave) => {
+            console.log(`Clave: ${clave}, Valor: ${valor}`);
+        });
     }
     getSimbolo(_clave){  //retornar simbolo
         for(let e=this; e!=null; e=e.anterior){

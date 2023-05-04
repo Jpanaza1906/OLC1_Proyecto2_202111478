@@ -25,8 +25,7 @@ function App() {
 
   function graficar_AST() {
     axios.get('http://localhost:5000/CrearAST')
-      .then(function (response) {
-        console.log(response);        
+      .then(function (response) {     
         window.open(response.data)
       })
       .catch(function (error) {
@@ -46,6 +45,17 @@ function App() {
         console.log(error);
       });
   }
+    // Mostrar simbolos
+    function reporteSimbolos(){
+      axios.get('http://localhost:5000/simbolos')
+        .then(function (response) {
+          console.log(response.data);
+          window.open(response.data)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   // ABRIR ARCHIVO-----------------------------------------------
   const handleChange = (event) => {
     let upload = document.getElementById("upload");
@@ -60,7 +70,7 @@ function App() {
   
   const handleSave = (event) => {
     // Crear un objeto Blob con el contenido del archivo
-    var valor = window.prompt("Ingrese el nombre del archivo a guardar:");
+    var valor = window.prompt("Ingrese el nombre para el archivo:");
     const content = code;
     const file = new Blob([content], { type: 'text/plain;charset=utf-8' });
 
@@ -136,7 +146,7 @@ function App() {
           <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Reportes</a>
           <ul className="dropdown-menu">
             <li><a className="dropdown-item" onClick={() => { perrors() }}>Errores</a></li>
-            <li><a className="dropdown-item" href="https://chat.openai.com/">Tabla de simbolos</a></li>
+            <li><a className="dropdown-item" onClick={() => { reporteSimbolos() }} >Tabla de simbolos</a></li>
           </ul>
         </li>
 

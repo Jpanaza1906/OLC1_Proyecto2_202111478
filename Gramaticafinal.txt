@@ -1,0 +1,299 @@
+/* lexical grammar */
+%lex
+%options case-insensitive
+%%
+
+\s+                   /* skip whitespace */
+"//".*                 //comentario lineal
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // comentario multiple líneas   
+
+"int"                   return 'Rint'
+"double"                return 'Rdouble'
+"boolean"               return 'Rboolean'
+"char"                  return 'Rchar'
+"string"                return 'Rstring'
+"if"                    return 'Rif'
+"else"                  return 'Relse'
+"switch"                return 'Rswitch'
+"case"                  return 'Rcase'
+"default"               return 'Rdefault'
+"break"                 return 'Rbreak'
+"return"                return 'Rreturn'
+"continue"              return 'Rcontinue'
+"for"                   return 'Rfor'
+"while"                 return 'Rwhile'
+"do"                    return 'Rdo'
+"list"                  return 'Rlist'
+"void"                  return 'Rvoid'
+"print"                 return 'Rprint'
+"true"                  return 'Rtrue'
+"false"                 return 'Rfalse'
+"main"                  return 'Rmain'
+"new"                   return 'Rnew'
+"add"                   return 'Radd'
+"toLower"               return 'RtoLower'
+"toUpper"               return 'RtoUpper'
+"length"                return 'Rlength'
+"truncate"              return 'Rtruncate'
+"round"                 return 'Rround'
+"typeof"                return 'Rtypeof'
+"toString"              return 'RtoString'
+"toCharArray"           return 'RtoCharArray'
+[0-9]+("."[0-9]+)\b    return 'decimal'
+"."                     return 'punto'
+[0-9]+\b                return 'entero'
+"=="                   return 'igualigual'       
+"!="                  return 'diferente'
+"<="                    return 'menorIgual'
+"<"                   return 'menor'
+">="                  return 'mayorIgual'
+"="                     return 'igual'
+">"                   return 'mayor'
+","                   return 'coma'
+";"                   return 'ptcoma'
+":"                   return 'dospuntos'
+"?"                   return 'inter'
+"||"                  return 'or'
+"&&"                  return 'and'
+"{"                   return 'llaveA'
+"}"                   return 'llaveC'
+"*"                   return 'multi'
+"/"                   return 'div'
+"--"                  return 'menosmenos'
+"++"                  return 'masmas'   
+"-"                   return 'menos'
+"+"                   return 'suma'
+"^"                   return 'exponente'
+"!"                   return 'not'
+"%"                   return 'modulo'
+"("                   return 'parA'
+")"                   return 'parC'
+"["                   return 'corchA'
+"]"                   return 'corchC'
+
+([a-zA-Z])([a-zA-Z0-9_])*               return 'identificador'
+["\""]([^"\""])*["\""]                  return 'string'
+["\'"]([^"\'"])*["\'"]                  return 'char'
+
+<<EOF>>               return 'EOF'
+
+
+/lex
+
+
+/* operator associations and precedence */
+%left 'Rreturn'
+%left 'or'
+%left 'and'
+%right 'not'
+%left 'Rbreak' 'inter' 'igualigual' 'menor' 'menorIgual' 'mayor' 'mayorIgual' 'diferente'
+%left 'suma' 'menos'
+%left 'multi' 'div' 'modulo' 
+%nonassoc 'exponente'
+%left umenos 
+%left ucasteo
+
+%start INICIO
+
+%% /* language grammar */
+
+INICIO: OPCIONESCUERPO EOF
+        ;
+
+OPCIONESCUERPO: OPCIONESCUERPO CUERPO
+                |CUERPO 
+                ;
+
+CUERPO: DEC_VAR ptcoma                            
+        |ASIG_VAR ptcoma 
+        |METODOS
+        |FUNCIONES
+        |MAIN  
+        |DEC_ESTRUCT 
+        |MODVECTOR 
+        |LISTA 
+;
+
+METODOS: Rvoid identificador parA parC llaveA INSTRUCCIONES llaveC 
+        | Rvoid identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES llaveC 
+;
+
+FUNCIONES: TIPO identificador parA LIST_PARAMETROS parC llaveA INSTRUCCIONES Rreturn EXPRESION ptcoma llaveC 
+        |  TIPO identificador parA LIST_PARAMETROS parC llaveA Rreturn EXPRESION ptcoma llaveC 
+        |  error llaveC 
+;
+
+LIST_PARAMETROS: LIST_PARAMETROS coma PARAMETROS  
+        |PARAMETROS 
+;
+
+PARAMETROS: TIPO identificador  
+;
+
+MAIN: Rmain identificador parA parC ptcoma 
+      |Rmain identificador parA PARAMETROS_LLAMADA parC ptcoma 
+
+;
+
+PARAMETROS_LLAMADA: PARAMETROS_LLAMADA coma EXPRESION 
+                |EXPRESION 
+;
+
+DEC_VAR: TIPO identificador  
+        |TIPO identificador igual EXPRESION  
+        |TIPO error ptcoma 
+;
+
+ASIG_VAR: identificador igual EXPRESION 
+        | identificador igual error ptcoma 
+;
+
+TIPO: Rint{$$= TIPO_DATO.ENTERO}
+    |Rdouble{$$= TIPO_DATO.DECIMAL}
+    |Rchar {$$= TIPO_DATO.CHAR}
+    |Rboolean{$$= TIPO_DATO.BOOL}
+    |Rstring {$$= TIPO_DATO.CADENA}
+;
+
+INSTRUCCIONES: INSTRUCCIONES INSTRUCCION 
+            |INSTRUCCION           
+;
+
+INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
+        |ASIG_VAR ptcoma {$$=$1;}
+        |METODO_INSTR_SINPARAMETROS ptcoma{$$=$1;}
+        |METODO_INSTR_PARAMETROS{$$=$1;}
+        |PRINT {$$=$1;}
+        |IF {$$=$1;}
+        |FOR {$$=$1;}
+        |WHILE {$$=$1;}
+        |DOWHILE {$$=$1;}
+        |INCREMENTOYDECREMENTO ptcoma 
+        |LISTA 
+        |SWITCH 
+        |Rreturn ptcoma
+        |Rreturn EXPRESION ptcoma
+        |Rbreak ptcoma
+        |Rcontinue ptcoma
+        |DEC_ESTRUCT 
+        |MODVECTOR 
+        |ADD_LIST 
+        | error ptcoma 
+;
+
+ADD_LIST: identificador punto Radd parA EXPRESION parC ptcoma 
+        | identificador punto error ptcoma 
+;
+
+DEC_ESTRUCT: TIPO corchA corchC identificador igual Rnew TIPO corchA EXPRESION corchC ptcoma 
+           | TIPO corchA corchC identificador igual llaveA LISTA_VALORES llaveC ptcoma 
+;
+
+LISTA_VALORES: LISTA_VALORES coma LISTAVALORES 
+                |LISTAVALORES
+;
+
+
+LISTAVALORES: EXPRESION   
+;
+
+MODVECTOR: identificador corchA EXPRESION corchC igual EXPRESION ptcoma 
+;
+
+METODO_INSTR_SINPARAMETROS: identificador parA parC 
+;
+
+METODO_INSTR_PARAMETROS: identificador parA PARAMETROS_LLAMADA parC ptcoma 
+;
+
+PRINT: Rprint parA EXPRESION parC ptcoma 
+        | Rprint error ptcoma
+;
+//TIPOS DE IF
+IF: Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC
+        |Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC Relse llaveA INSTRUCCIONES llaveC
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES  llaveC ELSEIF 
+        | Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC ELSEIF Relse llaveA INSTRUCCIONES llaveC 
+        | Rif error llaveC 
+;
+ELSEIF:ELSEIF CONEIF 
+      | CONEIF 
+; 
+CONEIF: Relse Rif parA EXPRESION parC llaveA INSTRUCCIONES llaveC 
+;
+//TIPOS DE SWTICH
+SWITCH: Rswitch parA EXPRESION parC llaveA CASES llaveC 
+        | Rswitch error llaveC 
+;
+
+CASES: CASES CASEN 
+     | CASEN 
+;
+CASEN: CASE dospuntos INSTRUCCIONES Rbreak ptcoma 
+CASE: Rcase EXPRESION 
+    | Rdefault      
+;
+
+//CICLO FOR
+FOR: Rfor parA DEC_VAR ptcoma EXPRESION ptcoma INCREMENTOYDECREMENTO parC llaveA INSTRUCCIONES llaveC 
+   | Rfor error llaveC 
+;
+//CICLO WHILE
+WHILE: Rwhile parA EXPRESION parC llaveA INSTRUCCIONES llaveC 
+   | Rwhile error llaveC 
+;
+//CICLO DO WHILE
+DOWHILE: Rdo llaveA INSTRUCCIONES llaveC Rwhile parA EXPRESION parC ptcoma 
+        | Rdo error llaveC 
+;
+//LISTAS
+LISTA: Rlist menor TIPO mayor identificador igual Rnew Rlist menor TIPO mayor ptcoma
+        | Rlist error ptcoma 
+;
+
+INCREMENTOYDECREMENTO: identificador masmas 
+                     | identificador menosmenos
+;
+
+EXPRESION: EXPRESION suma EXPRESION 
+         | RtoLower parA EXPRESION parC 
+         | RtoUpper parA EXPRESION parC
+         | Rlength parA EXPRESION parC 
+         | Rtruncate parA EXPRESION parC 
+         | Rround parA EXPRESION parC 
+         | Rtypeof parA EXPRESION parC
+         | RtoString parA EXPRESION parC 
+         | RtoCharArray parA EXPRESION parC 
+         | identificador parA PARAMETROS_LLAMADA parC
+         | parA TIPO parC EXPRESION %prec ucasteo 
+         | EXPRESION inter EXPRESION dospuntos EXPRESION 
+         | EXPRESION menos EXPRESION 
+         | EXPRESION multi EXPRESION 
+         | EXPRESION div EXPRESION   
+         | EXPRESION exponente EXPRESION 
+         | EXPRESION modulo EXPRESION  
+         | EXPRESION menor EXPRESION    
+         | EXPRESION mayor EXPRESION    
+         | EXPRESION menorIgual EXPRESION 
+         | EXPRESION mayorIgual EXPRESION 
+         | EXPRESION diferente EXPRESION  
+         | EXPRESION and EXPRESION 
+         | EXPRESION or EXPRESION 
+         | menos EXPRESION %prec umenos 
+         | not EXPRESION
+         | parA EXPRESION parC 
+         | EXPRESION igualigual EXPRESION 
+         | ACCESOVEC 
+         | ACCESOLIST 
+         | decimal 
+         | entero 
+         | Rtrue 
+         | Rfalse 
+         | string
+         | identificador
+         | char 
+;    
+ACCESOVEC: identificador corchA EXPRESION corchC
+;
+ACCESOLIST: identificador corchA corchA EXPRESION corchC corchC 
+;
