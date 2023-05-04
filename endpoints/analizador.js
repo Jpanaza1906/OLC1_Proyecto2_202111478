@@ -1,6 +1,7 @@
 const Ambito = require("../controladores/Ambito/Ambito")
 const Global = require("../controladores/Instruccion/Global")
 const Graficador = require("../controladores/Ambito/Graficador")
+const AgregarError = require("../controladores/Ambito/Error")
 var fs = require("fs")
 const { stdout, stderr } = require("process")
 
@@ -49,6 +50,12 @@ module.exports=(parser, app)=>{
             });
             
     })
+
+    
+    app.get('/error', (req, res) => {
+        const myString = AgregarError(1,1,1,1,1);
+        res.send(myString);
+    });
 
 
     

@@ -168,7 +168,6 @@ TIPO: Rint{$$= TIPO_DATO.ENTERO}
 
 INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$$ = $1; $1.push($2);}
             |INSTRUCCION {$$ = [$1];}            
-            | error ptcoma {AgregarError("Sintactico","Una instruccion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
@@ -190,6 +189,7 @@ INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           /
         |DEC_ESTRUCT {$$=$1}
         |MODVECTOR {$$=$1}
         |ADD_LIST {$$=$1}
+        | error ptcoma {AgregarError("Sintactico","Una instruccion esta mal siendo mal utilizada",yytext, this._$.first_line , this._$.first_column+1)}
 ;
 
 ADD_LIST: identificador punto Radd parA EXPRESION parC ptcoma {$$ = INSTRUCCION.nuevoAddList($1, $5, this._$.first_line, this._$.first_column+1)}

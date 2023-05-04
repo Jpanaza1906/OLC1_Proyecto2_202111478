@@ -34,7 +34,17 @@ function App() {
   }
   // CREAR ARCHIVO-----------------------------------------------
   const handleUpdate = (event) => { setCode("") }
-
+  //mostrar errores
+  function perrors(){
+    axios.get('http://localhost:5000/error')
+      .then(function (response) {
+        console.log(response.data);
+        window.open(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
   // ABRIR ARCHIVO-----------------------------------------------
   const handleChange = (event) => {
     let upload = document.getElementById("upload");
@@ -46,6 +56,7 @@ function App() {
       setCode(fr.result)
     };
   }
+  
   const handleSave = (event) => {
     // Crear un objeto Blob con el contenido del archivo
     var valor = window.prompt("Ingrese el nombre del archivo a guardar:");
@@ -92,16 +103,9 @@ function App() {
         <li>
           <h4>&nbsp;&nbsp;TypeWise&nbsp;&nbsp;</h4>
         </li>
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="https://chat.openai.com/" role="button" aria-expanded="false">Home</a>
-          <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="https://chat.openai.com/">Nueva Pestaña</a></li>
-            <li><a className="dropdown-item" href="https://chat.openai.com/">Cerrar Pestaña</a></li>
-          </ul>
-        </li>
 
         <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="https://chat.openai.com/" role="button" aria-expanded="false">Editor</a>
+          <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Editor</a>
           <ul className="dropdown-menu">
 
 
@@ -113,7 +117,7 @@ function App() {
             </li>
 
             <li>
-              <a className="dropdown-item" href="https://chat.openai.com/" style={{ position: 'relative' }}>
+              <a className="dropdown-item" href="" style={{ position: 'relative' }}>
                 <input type="file" accept=".tw, .txt" id="upload" onChange={handleChange} style={{ position: 'absolute', top: 0, left: 0, opacity: 0 }} />
                 Abrir Archivo
               </a>
@@ -128,9 +132,9 @@ function App() {
         </li>
 
         <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="https://chat.openai.com/" role="button" aria-expanded="false">Reportes</a>
+          <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">Reportes</a>
           <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="https://chat.openai.com/">Errores</a></li>
+            <li><a className="dropdown-item" onClick={() => { perrors() }}>Errores</a></li>
             <li><a className="dropdown-item" href="https://chat.openai.com/">Tabla de simbolos</a></li>
           </ul>
         </li>
