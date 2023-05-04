@@ -148,26 +148,26 @@ ASIG_VAR: identificador igual EXPRESION
         | identificador igual error ptcoma 
 ;
 
-TIPO: Rint{$$= TIPO_DATO.ENTERO}
-    |Rdouble{$$= TIPO_DATO.DECIMAL}
-    |Rchar {$$= TIPO_DATO.CHAR}
-    |Rboolean{$$= TIPO_DATO.BOOL}
-    |Rstring {$$= TIPO_DATO.CADENA}
+TIPO: Rint
+    |Rdouble
+    |Rchar 
+    |Rboolean
+    |Rstring 
 ;
 
 INSTRUCCIONES: INSTRUCCIONES INSTRUCCION 
             |INSTRUCCION           
 ;
 
-INSTRUCCION: DEC_VAR ptcoma {$$=$1;}                                           //DECLARACION DE CADA COMPONENTE DEL CUERPO DE MANERA RECURSIVA
-        |ASIG_VAR ptcoma {$$=$1;}
-        |METODO_INSTR_SINPARAMETROS ptcoma{$$=$1;}
-        |METODO_INSTR_PARAMETROS{$$=$1;}
-        |PRINT {$$=$1;}
-        |IF {$$=$1;}
-        |FOR {$$=$1;}
-        |WHILE {$$=$1;}
-        |DOWHILE {$$=$1;}
+INSTRUCCION: DEC_VAR ptcoma                                          
+        |ASIG_VAR ptcoma 
+        |METODO_INSTR_SINPARAMETROS ptcoma
+        |METODO_INSTR_PARAMETROS
+        |PRINT 
+        |IF 
+        |FOR 
+        |WHILE 
+        |DOWHILE 
         |INCREMENTOYDECREMENTO ptcoma 
         |LISTA 
         |SWITCH 
