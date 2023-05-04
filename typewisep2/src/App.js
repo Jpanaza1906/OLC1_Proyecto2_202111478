@@ -26,7 +26,8 @@ function App() {
   function graficar_AST() {
     axios.get('http://localhost:5000/CrearAST')
       .then(function (response) {
-        console.log(response);
+        console.log(response);        
+        window.open(response.data)
       })
       .catch(function (error) {
         console.log(error);

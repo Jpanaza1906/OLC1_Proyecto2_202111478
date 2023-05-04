@@ -27,27 +27,9 @@ module.exports=(parser, app)=>{
     })
 
     app.get("/CrearAST", (req,res) =>{
+        let url = 'https://quickchart.io/graphviz?graph='; 
         dot = grafica.graficar()
-        
-        fs.writeFile("./controladores/AST/AST.dot",dot,function(error){
-            if(error){
-                console.log(error)
-            }
-        });
-
-        const {exec} = require("child_process")
-            exec("dot -Tpng ./controladores/AST/AST.dot -o ./controladores/AST/AST.png", (error, stdout, stderr)=>{
-
-                if(error){
-                    console.log(error.message)
-                    res.send(error.message)
-                }
-    
-                if(stderr){
-                    console.log(stderr)
-                }
-                
-            });
+        res.send(url + dot)
             
     })
 
